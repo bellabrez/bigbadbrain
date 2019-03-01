@@ -1,6 +1,6 @@
 import sys
 import os
-import numpy
+import numpy as np
 from scipy.linalg import toeplitz
 from sklearn.linear_model import LassoLarsIC
 

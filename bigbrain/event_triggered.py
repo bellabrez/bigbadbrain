@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 import scipy
 
 def calc_event_triggered_delays(numpy_brain,

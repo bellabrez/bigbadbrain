@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 
 def correlate_brain(brain, to_cor):
     try:
