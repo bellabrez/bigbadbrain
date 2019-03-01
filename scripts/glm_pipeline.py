@@ -37,7 +37,7 @@ flies = [Fly() for i in range(len(fly_folders))]
 print('Created flies from folders {}'.format(fly_folders))
 sys.stdout.flush()
 
-desired_flies = [21] # 1 index
+desired_flies = [20] # 1 index
 fly_folders = [fly_folders[i-1] for i in desired_flies]
 flies = [flies[i-1] for i in desired_flies]
 print(fly_folders)

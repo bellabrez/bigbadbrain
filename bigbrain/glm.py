@@ -13,23 +13,24 @@ import ants
 def fit_glm(brain, dims, fictrac, beta_len):
     print('Fit GLM.')
     sys.stdout.flush()
-    middle = int((beta_len - 1) / 2)
-    models = []
-    scores = []
-    for z in range(dims['z']):
-        print('~~ z:{} ~~ '.format(z), end = '')
-        sys.stdout.flush()
-        Y = fictrac[:,z]
-        for x in range(dims['x']):
-            for y in range(dims['y']):
-                voxel_activity = brain[y,x,z,:]
-                X = toeplitz(voxel_activity, np.zeros(beta_len))
-                X = np.roll(X, middle)
-                model = LassoLarsIC(criterion='bic')
-                model.fit(X, Y)
-                #models.append(model)
-                scores.append(model.score(X,Y))
-    scores = np.reshape(scores, (dims['z'], dims['x'], dims['y']))
+    scores = None
+    # middle = int((beta_len - 1) / 2)
+    # models = []
+    # scores = []
+    # for z in range(dims['z']):
+    #     print('~~ z:{} ~~ '.format(z), end = '')
+    #     sys.stdout.flush()
+    #     Y = fictrac[:,z]
+    #     for x in range(dims['x']):
+    #         for y in range(dims['y']):
+    #             voxel_activity = brain[y,x,z,:]
+    #             X = toeplitz(voxel_activity, np.zeros(beta_len))
+    #             X = np.roll(X, middle)
+    #             model = LassoLarsIC(criterion='bic')
+    #             model.fit(X, Y)
+    #             #models.append(model)
+    #             scores.append(model.score(X,Y))
+    # scores = np.reshape(scores, (dims['z'], dims['x'], dims['y']))
     return scores
 
 def save_glm_map(vol, folder, channel):
