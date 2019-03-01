@@ -8,6 +8,9 @@ from xml.etree import ElementTree as ET
 sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
 import ants
 
+def testit():
+    print('HEY MAN.')
+
 def load_numpy_brain(file, channel=None, flip=False):
     # If no channel specified, load all channels, else load specified channel
     brain = nib.load(file).get_data()
