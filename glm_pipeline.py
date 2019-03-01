@@ -356,7 +356,6 @@ def save_motCorr_brain(brain, folder, suffix):
 @timing
 def motion_correction(brain_master=None, brain_slave=None, folder=None):
     send_email('started motion correction')
-    # old: numpy_brain, folder
     if brain_master is None:
         raise Exception('Must supply brain_master.')
     elif brain_master is not None and np.shape(brain_master) != np.shape(brain_slave):
@@ -628,8 +627,15 @@ def fit_glm(brain, dims, fictrac, beta_len):
 def save_glm_map(vol, folder, channel):
     print('Saving glm vol.')
     sys.stdout.flush()
+
+    # Make subfolder if it doesn't exist
+    subfolder = 'glm'
+    directory = os.path.join(folder, subfolder)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+ 
     file = 'multivariate_analysis_' + channel + '.nii'
-    save_file = os.path.join(folder, file)
+    save_file = os.path.join(directory, file)
     brain_to_save = np.swapaxes(vol, 0, 2)
     ants.image_write(ants.from_numpy(brain_to_save), save_file)
 
