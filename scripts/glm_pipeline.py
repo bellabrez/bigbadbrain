@@ -6,8 +6,7 @@ import scipy
 
 sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
 import ants
-sys.path.insert(0, '/home/users/brezovec/projects/lysis/')
-from bruker import *
+
 
 
 from bigbrain.brain import bleaching_correction

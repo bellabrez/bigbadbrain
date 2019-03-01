@@ -5,6 +5,9 @@ from email.mime.text import MIMEText
 from time import time
 from functools import wraps
 
+sys.path.insert(0, '/home/users/brezovec/projects/lysis/')
+from bruker import *
+
 def send_email(subject='', message=''):
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
