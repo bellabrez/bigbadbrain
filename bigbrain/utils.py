@@ -30,8 +30,8 @@ def timing(f):
         result = f(*args, **kwargs)
         end = time()
         duration = (end-start)/60
-        save_duration(name=f.__name__, duration=duration)
-        print('Elapsed time: {}{}'.format(duration,'min'))
+        #save_duration(name=f.__name__, duration=duration)
+        print(' {} Elapsed time: {}{}'.format(f.__name__,duration,'min'))
         sys.stdout.flush()
         return result
     return wrapper
