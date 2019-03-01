@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import sys
+from time import time
 
 from bigbrain.brain import get_resolution
 from bigbrain.brain import load_numpy_brain
@@ -22,7 +23,8 @@ def save_motCorr_brain(brain, folder, suffix):
     return motCorr_brain_ants
 
 @timing
-def motion_correction(brain_master=None, brain_slave=None, folder=None):
+def motion_correction(brain_master=None, brain_slave=None, folder=None, subfolder=None):
+    directory = os.path.join(folder, subfolder)
     if brain_master is None:
         raise Exception('Must supply brain_master.')
     elif brain_master is not None and np.shape(brain_master) != np.shape(brain_slave):
@@ -67,10 +69,10 @@ def motion_correction(brain_master=None, brain_slave=None, folder=None):
     print('Saving brain...', end='')
     sys.stdout.flush()
     t = time()
-    brain_master_motCorr = save_motCorr_brain(motCorr_brain_master, folder, suffix='red')
+    brain_master_motCorr = save_motCorr_brain(motCorr_brain_master, directory, suffix='red')
     
     if brain_slave is not None:
-        brain_slave_motCorr = save_motCorr_brain(motCorr_brain_slave, folder, suffix='green')
+        brain_slave_motCorr = save_motCorr_brain(motCorr_brain_slave, directory, suffix='green')
     print('Done. Duration: {:.1f}s'.format(time()-t))
     sys.stdout.flush()
 
@@ -88,7 +90,7 @@ def motion_correction(brain_master=None, brain_slave=None, folder=None):
     # Save mat transform file
     print('Saving transform file.')
     sys.stdout.flush()
-    save_file = os.path.join(folder, 'motcorr_params')
+    save_file = os.path.join(directory, 'motcorr_params')
     np.save(save_file,transform_matrix)
 
     # Get voxel resolution for figure
@@ -100,7 +102,7 @@ def motion_correction(brain_master=None, brain_slave=None, folder=None):
     # Save figure of motion over time
     print('Saving motion correction figure.')
     sys.stdout.flush()
-    save_file = os.path.join(folder, 'motion_correction.png')
+    save_file = os.path.join(directory, 'motion_correction.png')
     plt.figure(figsize=(10,10))
     plt.plot(transform_matrix[:,9]*x_res, label = 'y') # note, resolutions are switched since axes are switched
     plt.plot(transform_matrix[:,10]*y_res, label = 'x')
@@ -146,7 +148,7 @@ def get_motcorr_brain(folder, channel=None):
             ### Perform motion correction ###
             print('Performing motion-correction.')
             sys.stdout.flush()
-            brain_red, brain_green = motion_correction(brain_master=brain_red, brain_slave=brain_green, folder=directory)
+            brain_red, brain_green = motion_correction(brain_master=brain_red, brain_slave=brain_green, folder=folder, subfolder=subfolder)
         
         dims = get_dims(brain_green)
         return brain_green, dims
@@ -173,7 +175,7 @@ def get_motcorr_brain(folder, channel=None):
             ### Perform motion correction ###
             print('Performing motion-correction.')
             sys.stdout.flush()
-            brain_red, brain_green = motion_correction(brain_master=brain_red, brain_slave=brain_green, folder=directory)
+            brain_red, brain_green = motion_correction(brain_master=brain_red, brain_slave=brain_green, folder=folder, subfolder=subfolder)
             
         dims = get_dims(brain_red)
         return brain_red, dims
@@ -200,7 +202,7 @@ def get_motcorr_brain(folder, channel=None):
             ### Perform motion correction ###
             print('Performing motion-correction.')
             sys.stdout.flush()
-            brain_green = motion_correction(brain_master=brain_green, folder=folder)
+            brain_green = motion_correction(brain_master=brain_green, folder=folder, subfolder=subfolder)
 
         dims = get_dims(brain)
         return brain, dims
