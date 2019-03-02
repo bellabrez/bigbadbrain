@@ -4,6 +4,7 @@ import sys
 from time import time
 
 from bigbrain.brain import get_resolution
+from bigbrain.brain import get_dims
 from bigbrain.brain import load_numpy_brain
 from bigbrain.utils import timing
 
