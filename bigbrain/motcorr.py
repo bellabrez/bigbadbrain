@@ -2,6 +2,7 @@ import numpy as np
 import os
 import sys
 from time import time
+import matplotlib.pyplot as plt
 
 from bigbrain.brain import get_resolution
 from bigbrain.brain import get_dims
