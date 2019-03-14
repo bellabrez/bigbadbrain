@@ -8,7 +8,7 @@ from scipy.interpolate import interp1d
 from bigbrain.utils import timing
 
 @timing
-def prep_fictrac(fictrac, timestamps, fps, dur):
+def prep_fictrac(fictrac, column='speed', timestamps, fps, dur):
     print('Preping fictrac.')
     sys.stdout.flush()
     camera_rate = 1/fps * 1000 # camera frame rate in ms
@@ -18,7 +18,7 @@ def prep_fictrac(fictrac, timestamps, fps, dur):
     fictrac = fictrac[:90000]
     
     # Smooth
-    fictrac_smoothed = scipy.ndimage.filters.gaussian_filter(np.asarray(fictrac['speed']),sigma=3)
+    fictrac_smoothed = scipy.ndimage.filters.gaussian_filter(np.asarray(fictrac[column]),sigma=3)
     
     # Interpolate
     # Warning: interp1d set to fill in out of bounds times
@@ -29,7 +29,6 @@ def prep_fictrac(fictrac, timestamps, fps, dur):
     np.nan_to_num(fictrac_interp, copy=False);
     
     return fictrac_interp
-
 
 @timing
 def load_fictrac(root_path, fly_folder):
