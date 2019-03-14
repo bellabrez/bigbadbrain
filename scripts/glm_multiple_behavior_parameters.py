@@ -95,7 +95,7 @@ for fly_idx, fly in enumerate(flies):
             scores = fit_glm(brain, dims, fictrac_interp, beta_len)
 
             ### Save brain ###
-            save_glm_map(scores, folder, channel)
+            save_glm_map(scores, folder, channel, behavior=column)
 
             ### Send email ###
 
