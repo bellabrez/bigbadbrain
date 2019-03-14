@@ -11,6 +11,7 @@ import ants
 from bigbrain.brain import bleaching_correction
 from bigbrain.brain import z_score_brain
 from bigbrain.brain import get_resolution
+from bigbrain.brain import load_numpy_brain
 from bigbrain.fictrac import load_fictrac
 from bigbrain.fictrac import prep_fictrac
 from bigbrain.utils import load_timestamps
@@ -45,16 +46,15 @@ folder = root_path + fly_folders[0]
 
 z_brain_file = os.path.join(folder, 'brain_z.nii')
 
-brain = load_numpy_brain(z_brain_file, channel=None, flip=False):
+brain = load_numpy_brain(z_brain_file, channel=None, flip=False)
 
 #every row is a time point of the whole brain (so flatten brain for each row)
 X = np.reshape(brain, (-1, brain.shape[-1]))
-X = np.swapaxes(X, 0, 1)
 
 t0 = time()
 pca = PCA()
 PCs = pca.fit_transform(X)
 print(time()-t0)
 
-save_file = os.path.join(folder, 'pca_out')
+save_file = os.path.join(folder, 'pca_out_flipped')
 np.save(save_file,PCs)
