@@ -27,10 +27,10 @@ def fit_glm(brain, dims, fictrac, beta_len):
                 X = np.roll(X, middle)
                 model = LassoLarsIC(criterion='bic')
                 model.fit(X, Y)
-                betas.append(model._coef)
+                betas.append(model.coef_)
                 scores.append(model.score(X,Y))
     scores = np.reshape(scores, (dims['z'], dims['x'], dims['y']))
-    betas = np.reshape(betas, (dims['z'], dims['x'], dims['y'], -1))
+    betas = np.reshape(betas, (dims['z'], dims['x'], dims['y'], beta_len))
     return scores, betas
 
 def save_glm_map(scores_vol, betas_vol, folder, channel, behavior='speed'):

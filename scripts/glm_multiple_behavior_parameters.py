@@ -7,8 +7,6 @@ import scipy
 sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
 import ants
 
-
-
 from bigbrain.brain import bleaching_correction
 from bigbrain.brain import z_score_brain
 from bigbrain.brain import get_resolution
@@ -64,7 +62,7 @@ for fly_idx, fly in enumerate(flies):
     fictrac = load_fictrac(root_path, fly_folders[fly_idx])
 
 
-    columns = ['dRotLabX, dRotLabY, dRotLabZ']
+    columns = ['dRotLabX', 'dRotLabY', 'dRotLabZ', 'speed']
     for column in columns:
         print('About to prep')
         sys.stdout.flush()
