@@ -58,20 +58,21 @@ for fly_idx, fly in enumerate(flies):
 
     ### Load timestamps ###
     timestamps = load_timestamps(folder)
+    timestamps = timestamps[vols_to_clip:,:]
     
-    ### Load fictrac (and prep) ###
+    ### Load fictrac ###
     fictrac = load_fictrac(root_path, fly_folders[fly_idx])
+
 
     columns = ['dRotLabX, dRotLabY, dRotLabZ']
     for column in columns:
         print('About to prep')
         sys.stdout.flush()
-        fictrac_interp = prep_fictrac(fictrac, timestamps, fps, dur)
+        fictrac_interp = prep_fictrac(fictrac, timestamps, fps, dur, behavior=column)
         print('Just preped')
         sys.stdout.flush()
         
         # remove first bit of data since it often has some weirdness
-        timestamps = timestamps[vols_to_clip:,:]
         fictrac_interp = fictrac_interp[vols_to_clip:,:]
         
         send_email('loaded timestamps and fictrac', 'wow')
@@ -92,10 +93,10 @@ for fly_idx, fly in enumerate(flies):
             brain = z_score_brain(brain)
 
             ### Fit GLM ###
-            scores = fit_glm(brain, dims, fictrac_interp, beta_len)
+            scores, betas = fit_glm(brain, dims, fictrac_interp, beta_len)
 
             ### Save brain ###
-            save_glm_map(scores, folder, channel, behavior=column)
+            save_glm_map(scores, betas, folder, channel, behavior=column)
 
             ### Send email ###
 

@@ -8,7 +8,7 @@ from scipy.interpolate import interp1d
 from bigbrain.utils import timing
 
 @timing
-def prep_fictrac(fictrac, column='speed', timestamps, fps, dur):
+def prep_fictrac(fictrac, timestamps, fps, dur, column='speed'):
     print('Preping fictrac.')
     sys.stdout.flush()
     camera_rate = 1/fps * 1000 # camera frame rate in ms
