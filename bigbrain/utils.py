@@ -1,6 +1,7 @@
 import sys
 import smtplib
 import re
+import os
 from email.mime.text import MIMEText
 from time import time
 from functools import wraps
@@ -71,5 +72,5 @@ def get_fly_folders(root_path, desired_flies):
     folders = []
     for fly_folder in fly_folders:
         folders.append(os.path.join(root_path + fly_folder))
-        
+
     return folders
