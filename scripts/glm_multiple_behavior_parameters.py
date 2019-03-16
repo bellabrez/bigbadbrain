@@ -34,7 +34,7 @@ flies = [Fly() for i in range(len(fly_folders))]
 print('Created flies from folders {}'.format(fly_folders))
 sys.stdout.flush()
 
-desired_flies = [21] # 1 index
+desired_flies = [24,25,26] # 1 index
 fly_folders = [fly_folders[i-1] for i in desired_flies]
 flies = [flies[i-1] for i in desired_flies]
 print(fly_folders)
@@ -70,10 +70,12 @@ for fly_idx, fly in enumerate(flies):
         print('Just preped')
         sys.stdout.flush()
         
-        # remove first bit of data since it often has some weirdness
-        fictrac_interp = fictrac_interp[vols_to_clip:,:]
+        # remove first bit of data since it often has some weirdness. Dont need this since timestamps
+        # are being used to interp
+        # fictrac_interp = fictrac_interp[vols_to_clip:,:]
         
         send_email('loaded timestamps and fictrac', 'wow')
+        print('fictrac: {}, timestamps: {}'.format(np.shape(fictrac_interp), np.shape(timestamps)))	
         
         channels = ['green']
         for channel in channels:
@@ -83,6 +85,7 @@ for fly_idx, fly in enumerate(flies):
             # remove first bit of data since it often has some weirdness
             brain = brain[:,:,:,vols_to_clip:]
             dims['t'] = brain.shape[3]
+            print('brain shape: {}'.format(brain.shape))
 
             ### Bleaching correction (per voxel) ###
             brain = bleaching_correction(brain)
