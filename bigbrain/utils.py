@@ -58,3 +58,18 @@ def load_timestamps(folder, file='functional.xml'):
     except:
         timestamps = bruker_timestamps_import(folder, file, True)
     return timestamps
+
+def get_fly_folders(root_path, desired_flies):
+    fly_folders = sorted(os.listdir(root_path))
+    fly_folders = [x for x in fly_folders if 'fly' in x]
+    sort_nicely(fly_folders)
+    fly_folders = [fly_folders[i-1] for i in desired_flies]
+
+    print('fly folders: {}'.format(fly_folders))
+    sys.stdout.flush()
+
+    folders = []
+    for fly_folder in fly_folders:
+        folders.append(os.path.join(root_path + fly_folder))
+        
+    return folders
