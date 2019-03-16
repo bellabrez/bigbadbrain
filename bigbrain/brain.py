@@ -25,6 +25,9 @@ def load_numpy_brain(file, channel=None, flip=False):
     #brain = ants.from_numpy(brain)
     return brain
 
+def save_brain(file, brain):
+    ants.image_write(ants.from_numpy(brain), file)
+
 def load_brains_from_dir(folder):
     brain_files = sorted(os.listdir(folder))
     full_brain_files = [folder+brain_file for brain_file in brain_files]

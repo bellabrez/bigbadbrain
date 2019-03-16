@@ -10,49 +10,38 @@ import ants
 from bigbrain.brain import bleaching_correction
 from bigbrain.brain import z_score_brain
 from bigbrain.brain import get_resolution
+from bigbrain.brain import save_brain
 from bigbrain.fictrac import load_fictrac
 from bigbrain.fictrac import prep_fictrac
 from bigbrain.utils import load_timestamps
-from bigbrain.utils import sort_nicely
+from bigbrain.utils import get_fly_folders
 from bigbrain.utils import send_email
 from bigbrain.glm import fit_glm
 from bigbrain.glm import save_glm_map
 from bigbrain.motcorr import get_motcorr_brain
 
-class Fly:
-    def __init__(self):
-        pass
-    
 root_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
-
-fly_folders = sorted(os.listdir(root_path))
-fly_folders = [x for x in fly_folders if 'fly' in x]
-sort_nicely(fly_folders)
-
-flies = [Fly() for i in range(len(fly_folders))]
-
-print('Created flies from folders {}'.format(fly_folders))
-sys.stdout.flush()
-
-desired_flies = [24,25,26] # 1 index
-fly_folders = [fly_folders[i-1] for i in desired_flies]
-flies = [flies[i-1] for i in desired_flies]
-print(fly_folders)
-sys.stdout.flush()
+desired_flies = [21] # 1 index
+folders = get_fly_folders(root_path, desired_flies)
 
 beta_len = 21 #MUST BE ODD
 fps = 50 #of fictrac camera
 dur = 30 * 60 * 1000 # experiment duration in ms
 vols_to_clip = 200
+channels = ['green']
+behaviors = ['dRotLabX', 'dRotLabY', 'dRotLabZ', 'speed']
 
-for fly_idx, fly in enumerate(flies):
+#######################
+### Loop over flies ###
+#######################
+
+for fly_idx, folder in enumerate(folders):
     
     ### Send email and define folder path ###
     function_durations = []
-    print('Starting analysis of {}.'.format(fly_folders[fly_idx]))
+    print('Starting analysis of {}.'.format(folder))
     sys.stdout.flush()
-    send_email('Starting {} ({} of {}).'.format(fly_folders[fly_idx], fly_idx+1, len(flies)), 'wow')
-    folder = root_path + fly_folders[fly_idx]
+    send_email('Starting {} ({} of {}).'.format(folder, fly_idx+1, len(folders)), 'wow')
 
     ### Load timestamps ###
     timestamps = load_timestamps(folder)
@@ -61,25 +50,23 @@ for fly_idx, fly in enumerate(flies):
     ### Load fictrac ###
     fictrac = load_fictrac(root_path, fly_folders[fly_idx])
 
+    send_email('loaded timestamps and fictrac', 'wow')
+    print('fictrac: {}, timestamps: {}'.format(np.shape(fictrac_interp), np.shape(timestamps)))
+    sys.stdout.flush()
+    
+    ##########################
+    ### Loop over channels ###
+    ##########################
 
-    columns = ['dRotLabX', 'dRotLabY', 'dRotLabZ', 'speed']
-    for column in columns:
-        print('About to prep')
-        sys.stdout.flush()
-        fictrac_interp = prep_fictrac(fictrac, timestamps, fps, dur, behavior=column)
-        print('Just preped')
-        sys.stdout.flush()
+    for channel in channels:
         
-        # remove first bit of data since it often has some weirdness. Dont need this since timestamps
-        # are being used to interp
-        # fictrac_interp = fictrac_interp[vols_to_clip:,:]
-        
-        send_email('loaded timestamps and fictrac', 'wow')
-        print('fictrac: {}, timestamps: {}'.format(np.shape(fictrac_interp), np.shape(timestamps)))	
-        
-        channels = ['green']
-        for channel in channels:
-            ### Load brain ###
+        ### Load brain ###
+        zbrain_file = os.path.join(folder, 'brain_zscored_' + channel + '.nii')
+        try:
+            # Try to load z-scored brain
+            brain = load_numpy_brain(zbrain_file)
+            dims = get_dims(brain)
+        except:
             brain, dims = get_motcorr_brain(folder, channel=channel)
 
             # remove first bit of data since it often has some weirdness
@@ -92,22 +79,22 @@ for fly_idx, fly in enumerate(flies):
 
             ### Z-score brain ###
             brain = z_score_brain(brain)
+            save_brain(zbrain_file, brain)
 
+        ###########################
+        ### Loop over behaviors ###
+        ###########################
+
+        for behavior in behaviors:
+
+            ### Prep given behavior ###
+            fictrac_interp = prep_fictrac(fictrac, timestamps, fps, dur, behavior=behavior)
+        
             ### Fit GLM ###
             scores, betas = fit_glm(brain, dims, fictrac_interp, beta_len)
 
             ### Save brain ###
-            save_glm_map(scores, betas, folder, channel, behavior=column)
+            save_glm_map(scores, betas, folder, channel, behavior=behavior)
 
-            ### Send email ###
-
-            # Prep timing string
-            func_str = ''
-            for func in function_durations:
-                func_str += '{} ===== {:.2f} min\n'.format(func['name'], func['duration'])
-            print(func_str)
-            sys.stdout.flush()
-
-            #send_email('Success {} ({} of {}):{} {} channel.'.format(fly_folders[fly_idx], fly_idx+1, len(flies)), func_str, channel)
             print('Reached END.')
             sys.stdout.flush()
