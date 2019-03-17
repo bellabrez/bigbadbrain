@@ -89,7 +89,7 @@ def get_resolution(xml_file):
 
 @timing
 def bleaching_correction(brain):
-    print('Bleaching correction.')
+    print('\n~~ Performing bleaching correction ~~')
     sys.stdout.flush()
     smoothed = scipy.ndimage.gaussian_filter1d(brain,sigma=200,axis=3,truncate=1)
     brain = brain - smoothed
@@ -97,7 +97,7 @@ def bleaching_correction(brain):
 
 @timing
 def z_score_brain(brain):
-    print('Z-score brain.')
+    print('\n~~ Z-scoring brain ~~')
     sys.stdout.flush()
     brain_mean  = np.mean(brain, axis=3)
     brain_std = np.std(brain, axis=3)

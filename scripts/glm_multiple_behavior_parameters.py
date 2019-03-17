@@ -57,12 +57,16 @@ for fly_idx, folder in enumerate(folders):
     for channel in channels:
 
         ### Load brain ###
+        print('\n~~ Loading Brain ~~')
+        sys.stdout.flush()
         zbrain_file = os.path.join(folder, 'brain_zscored_' + channel + '.nii')
         try:
+            print('Trying to load z-scored brain.')
             # Try to load z-scored brain
             brain = load_numpy_brain(zbrain_file)
             dims = get_dims(brain)
         except:
+            print('Failed. Trying to laod motion corrected brain.')
             brain, dims = get_motcorr_brain(folder, channel=channel)
 
             # remove first bit of data since it often has some weirdness
