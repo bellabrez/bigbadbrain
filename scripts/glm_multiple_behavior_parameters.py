@@ -21,7 +21,7 @@ from bigbrain.glm import save_glm_map
 from bigbrain.motcorr import get_motcorr_brain
 
 root_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
-desired_flies = [21] # 1 index
+desired_flies = [11,12,13,14,17,19,20] # 1 index
 folders = get_fly_folders(root_path, desired_flies)
 
 beta_len = 21 #MUST BE ODD
@@ -48,9 +48,7 @@ for fly_idx, folder in enumerate(folders):
     timestamps = timestamps[vols_to_clip:,:]
     
     ### Load fictrac ###
-    fictrac = load_fictrac(root_path, fly_folders[fly_idx])
-
-    send_email('loaded timestamps and fictrac', 'wow')
+    fictrac = load_fictrac(root_path, folder)
     
     ##########################
     ### Loop over channels ###
