@@ -11,14 +11,23 @@ import ants
 
 @timing
 def fit_glm(brain, dims, fictrac, beta_len):
-    print('Fit GLM.')
+    print('\n~~ Fitting GLM ~~')
     sys.stdout.flush()
     middle = int((beta_len - 1) / 2)
     betas = []
     scores = []
+    print('Z-slice progress (out of {}): '.format(dims['z']), end='')
+    sys.stdout.flush()
     for z in range(dims['z']):
-        print('~~ z:{} ~~ '.format(z), end = '')
-        sys.stdout.flush()
+
+        ### Printing updates ###
+        if z == dims['z']-1:
+            print('{}.'.format(z))
+            sys.stdout.flush()
+        else:
+            print('{}, '.format(z), end = '')
+            sys.stdout.flush()
+
         Y = fictrac[:,z]
         for x in range(dims['x']):
             for y in range(dims['y']):
@@ -33,8 +42,9 @@ def fit_glm(brain, dims, fictrac, beta_len):
     betas = np.reshape(betas, (dims['z'], dims['x'], dims['y'], beta_len))
     return scores, betas
 
+@timing
 def save_glm_map(scores_vol, betas_vol, folder, channel, behavior='speed'):
-    print('Saving glm vol.')
+    print('\n~~ Saving GLM ~~')
     sys.stdout.flush()
 
     # Make subfolder if it doesn't exist

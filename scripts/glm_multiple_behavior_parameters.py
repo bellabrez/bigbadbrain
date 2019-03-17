@@ -39,7 +39,7 @@ for fly_idx, folder in enumerate(folders):
     
     ### Send email and define folder path ###
     function_durations = []
-    print('Starting analysis of {}.'.format(folder))
+    print('\n ~~~~ Starting analysis of {} ~~~~'.format(folder))
     sys.stdout.flush()
     send_email('Starting {} ({} of {}).'.format(folder, fly_idx+1, len(folders)), 'wow')
 
@@ -51,15 +51,13 @@ for fly_idx, folder in enumerate(folders):
     fictrac = load_fictrac(root_path, fly_folders[fly_idx])
 
     send_email('loaded timestamps and fictrac', 'wow')
-    print('fictrac: {}, timestamps: {}'.format(np.shape(fictrac_interp), np.shape(timestamps)))
-    sys.stdout.flush()
     
     ##########################
     ### Loop over channels ###
     ##########################
 
     for channel in channels:
-        
+
         ### Load brain ###
         zbrain_file = os.path.join(folder, 'brain_zscored_' + channel + '.nii')
         try:
@@ -95,6 +93,3 @@ for fly_idx, folder in enumerate(folders):
 
             ### Save brain ###
             save_glm_map(scores, betas, folder, channel, behavior=behavior)
-
-            print('Reached END.')
-            sys.stdout.flush()

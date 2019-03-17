@@ -7,7 +7,6 @@ from scipy.interpolate import interp1d
 
 from bigbrain.utils import timing
 
-@timing
 def prep_fictrac(fictrac, timestamps, fps, dur, behavior='speed'):
     print('Preping fictrac.')
     sys.stdout.flush()
@@ -32,7 +31,7 @@ def prep_fictrac(fictrac, timestamps, fps, dur, behavior='speed'):
 
 @timing
 def load_fictrac(root_path, fly_folder):
-    print('Loading fictrac.')
+    print('\n~~ Loading Timestamps ~~')
     sys.stdout.flush()
     with open(os.path.join(root_path, fly_folder, 'fictrac.dat'),'r') as f:
                 df = pd.DataFrame(l.rstrip().split() for l in f)
