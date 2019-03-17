@@ -21,7 +21,8 @@ from bigbrain.glm import save_glm_map
 from bigbrain.motcorr import get_motcorr_brain
 
 root_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
-desired_flies = [13,14,17,19,20] # 1 index
+desired_flies = [1,2,3,4,5,6,7,8,9,10] # 1 index
+deprecated_motcorr = True
 folders = get_fly_folders(root_path, desired_flies)
 
 beta_len = 21 #MUST BE ODD
@@ -29,7 +30,7 @@ fps = 50 #of fictrac camera
 dur = 30 * 60 * 1000 # experiment duration in ms
 vols_to_clip = 200
 channels = ['green']
-behaviors = ['dRotLabZ'] #'dRotLabX', 'dRotLabY', 'speed'
+behaviors = ['dRotLabZ', 'speed'] #'dRotLabX', 'dRotLabY', 'speed'
 
 #######################
 ### Loop over flies ###
@@ -67,7 +68,12 @@ for fly_idx, folder in enumerate(folders):
             dims = get_dims(brain)
         except:
             print('Failed. Trying to load motion corrected brain.')
-            brain, dims = get_motcorr_brain(folder, channel=channel)
+            if deprecated_motcorr:
+                deprecated_file = os.path.join(folder, 'motcorr.nii')
+                brain = load_numpy_brain(deprecated_file)
+                dims = get_dims(brain)
+            else:
+                brain, dims = get_motcorr_brain(folder, channel=channel)
 
             # remove first bit of data since it often has some weirdness
             #brain = brain[:,:,:,vols_to_clip:]
