@@ -11,6 +11,7 @@ from bigbrain.brain import bleaching_correction
 from bigbrain.brain import z_score_brain
 from bigbrain.brain import get_resolution
 from bigbrain.brain import save_brain
+from bigbrain.brain import load_numpy_brain
 from bigbrain.fictrac import load_fictrac
 from bigbrain.fictrac import prep_fictrac
 from bigbrain.utils import load_timestamps
