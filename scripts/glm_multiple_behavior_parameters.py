@@ -21,7 +21,7 @@ from bigbrain.glm import save_glm_map
 from bigbrain.motcorr import get_motcorr_brain
 
 root_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
-desired_flies = [11,12,13,14,17,19,20] # 1 index
+desired_flies = [13,14,17,19,20] # 1 index
 folders = get_fly_folders(root_path, desired_flies)
 
 beta_len = 21 #MUST BE ODD
@@ -29,7 +29,7 @@ fps = 50 #of fictrac camera
 dur = 30 * 60 * 1000 # experiment duration in ms
 vols_to_clip = 200
 channels = ['green']
-behaviors = ['dRotLabX', 'dRotLabY', 'dRotLabZ', 'speed']
+behaviors = ['dRotLabZ'] #'dRotLabX', 'dRotLabY', 'speed'
 
 #######################
 ### Loop over flies ###
@@ -45,7 +45,7 @@ for fly_idx, folder in enumerate(folders):
 
     ### Load timestamps ###
     timestamps = load_timestamps(folder)
-    timestamps = timestamps[vols_to_clip:,:]
+    #timestamps = timestamps[vols_to_clip:,:]
     
     ### Load fictrac ###
     fictrac = load_fictrac(root_path, folder)
@@ -66,13 +66,13 @@ for fly_idx, folder in enumerate(folders):
             brain = load_numpy_brain(zbrain_file)
             dims = get_dims(brain)
         except:
-            print('Failed. Trying to laod motion corrected brain.')
+            print('Failed. Trying to load motion corrected brain.')
             brain, dims = get_motcorr_brain(folder, channel=channel)
 
             # remove first bit of data since it often has some weirdness
-            brain = brain[:,:,:,vols_to_clip:]
-            dims['t'] = brain.shape[3]
-            print('brain shape: {}'.format(brain.shape))
+            #brain = brain[:,:,:,vols_to_clip:]
+            #dims['t'] = brain.shape[3]
+            #print('brain shape: {}'.format(brain.shape))
 
             ### Bleaching correction (per voxel) ###
             brain = bleaching_correction(brain)
