@@ -31,7 +31,7 @@ def prep_fictrac(fictrac, timestamps, fps, dur, behavior='speed'):
 
 @timing
 def load_fictrac(root_path, fly_folder):
-    print('\n~~ Loading Timestamps ~~')
+    print('\n~~ Loading Fictrac ~~')
     sys.stdout.flush()
     with open(os.path.join(root_path, fly_folder, 'fictrac.dat'),'r') as f:
                 df = pd.DataFrame(l.rstrip().split() for l in f)
