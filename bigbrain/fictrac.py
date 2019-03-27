@@ -5,7 +5,7 @@ import scipy
 import pandas as pd
 from scipy.interpolate import interp1d
 
-from bigbrain.utils import timing
+from BigBadBrain.utils import timing
 
 def prep_fictrac(fictrac, timestamps, fps, dur, behavior='speed'):
     print('Preping fictrac.')

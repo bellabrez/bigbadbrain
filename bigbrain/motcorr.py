@@ -4,10 +4,8 @@ import sys
 from time import time
 import matplotlib.pyplot as plt
 
-from bigbrain.brain import get_resolution
-from bigbrain.brain import get_dims
-from bigbrain.brain import load_numpy_brain
-from bigbrain.utils import timing
+from BigBadBrain.brain import get_resolution, get_dims, load_numpy_brain
+from BigBadBrain.utils import timing
 
 sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
 import ants

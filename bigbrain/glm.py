@@ -4,7 +4,7 @@ import numpy as np
 from scipy.linalg import toeplitz
 from sklearn.linear_model import LassoLarsIC
 
-from bigbrain.utils import timing
+from BigBadBrain.utils import timing
 
 sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
 import ants
