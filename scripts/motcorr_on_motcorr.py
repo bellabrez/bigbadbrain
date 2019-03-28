@@ -11,7 +11,7 @@ from BigBadBrain.brain import bleaching_correction, z_score_brain, get_resolutio
 from BigBadBrain.fictrac import load_fictrac, prep_fictrac
 from BigBadBrain.utils import load_timestamps, get_fly_folders, send_email
 from BigBadBrain.glm import fit_glm, save_glm_map
-from BigBadBrain.motcorr import get_motcorr_brain
+from BigBadBrain.motcorr import get_motcorr_brain, motion_correction
 
 root_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
 desired_flies = [25] # 1 index
