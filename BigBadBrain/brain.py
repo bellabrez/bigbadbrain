@@ -5,7 +5,7 @@ import scipy
 import nibabel as nib
 from xml.etree import ElementTree as ET
 
-from bigbrain.utils import timing
+from BigBadBrain.utils import timing
 
 sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
 import ants

@@ -120,3 +120,17 @@ def get_fly_folders(root_path, desired_flies):
         folders.append(os.path.join(root_path + fly_folder))
 
     return folders
+
+def fft_signal(signal, sampling_rate, duration):
+    Fs = sampling_rate
+    y = signal
+    Ts = 1.0/Fs; # sampling interval
+    t = np.arange(0,duration,Ts) # time vector
+    n = len(y) # length of the signal
+    k = np.arange(n)
+    T = n/Fs
+    frq = k/T # two sides frequency range
+    frq = frq[range(int(n/2))] # one side frequency range
+    Y = np.fft.fft(y)/n # fft computing and normalization
+    Y = Y[range(int(n/2))]
+    return y,Y,t

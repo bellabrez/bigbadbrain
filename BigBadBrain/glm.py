@@ -64,3 +64,30 @@ def save_glm_map(scores_vol, betas_vol, folder, channel, behavior='speed'):
     save_file = os.path.join(directory, file)
     brain_to_save = np.swapaxes(betas_vol, 0, 2)
     ants.image_write(ants.from_numpy(brain_to_save), save_file)
+
+@timing
+def create_multivoxel_X_matrix(brain, dims, beta_len):
+    print('\n~~ Creating Multivoxel X matrix ~~')
+    sys.stdout.flush()
+    middle = int((beta_len - 1) / 2)
+    Xs = []
+    print('Z-slice progress (out of {}): '.format(dims['z']), end='')
+    sys.stdout.flush()
+    for z in range(dims['z']):
+
+        ### Printing updates ###
+        if z == dims['z']-1:
+            print('{}.'.format(z))
+            sys.stdout.flush()
+        else:
+            print('{}, '.format(z), end = '')
+            sys.stdout.flush()
+
+        for x in range(dims['x']):
+            for y in range(dims['y']):
+                voxel_activity = brain[y,x,z,:]
+                X = toeplitz(voxel_activity, np.zeros(beta_len))
+                X = np.roll(X, middle)
+                Xs.append(X)
+    out = np.concatenate(np.asarray(Xs),axis=1)
+    return out
