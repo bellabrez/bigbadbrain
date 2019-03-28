@@ -27,7 +27,7 @@ def motion_correction(brain_master=None, brain_slave=None, folder=None, subfolde
     directory = os.path.join(folder, subfolder)
     if brain_master is None:
         raise Exception('Must supply brain_master.')
-    elif brain_master is not None and np.shape(brain_master) != np.shape(brain_slave):
+    elif brain_master is not None and brain_slave is not None and np.shape(brain_master) != np.shape(brain_slave):
         raise Exception('Dimensions of master and slave brain must match.')
     
     # Make mean brain
