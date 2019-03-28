@@ -37,4 +37,4 @@ for fly_idx, folder in enumerate(folders):
     brain = load_numpy_brain(brain_file)
 
     ### Perform motion correction ###
-    brain_motcorr = motion_correction(brain_master=brain, folder=folder, subfolder=motcorr_on_motcorr)
+    brain_motcorr = motion_correction(brain_master=brain, folder=folder, subfolder='motcorr_on_motcorr')
