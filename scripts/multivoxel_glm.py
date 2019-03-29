@@ -34,17 +34,21 @@ for fly_idx, folder in enumerate(folders):
     ### Load brain ###
     print('\n~~ Loading Brain ~~')
     sys.stdout.flush()
-    brain_file = os.path.join(folder, 'motcorr', 'motcorr_green.nii')
-    brain = load_numpy_brain(brain_file)
-    dims = get_dims(brain)
+    z_brain_file = os.path.join(folder, 'brain_zscored_green.nii')
+    try:
+        brain = load_numpy_brain(z_brain_file)
+        dims = get_dims(brain)
+    except:
+        brain_file = os.path.join(folder, 'motcorr', 'motcorr_green.nii')
+        brain = load_numpy_brain(brain_file)
+        dims = get_dims(brain)
 
-    ### Bleaching correction (per voxel) ###
-    brain = bleaching_correction(brain)
+        ### Bleaching correction (per voxel) ###
+        brain = bleaching_correction(brain)
 
-    ### Z-score brain ###
-    brain = z_score_brain(brain)
-    zbrain_file = os.path.join(folder, 'brain_zscored_green.nii')
-    save_brain(zbrain_file, brain)
+        ### Z-score brain ###
+        brain = z_score_brain(brain)
+        save_brain(zbrain_file, brain)
 
     ### Create and save multivoxel X matrix ###
     X = create_multivoxel_X_matrix(brain, dims, beta_len)
