@@ -43,6 +43,7 @@ for fly_idx, folder in enumerate(folders):
 
     ### Z-score brain ###
     brain = z_score_brain(brain)
+    zbrain_file = os.path.join(folder, 'brain_zscored_green.nii')
     save_brain(zbrain_file, brain)
 
     ### Create and save multivoxel X matrix ###
