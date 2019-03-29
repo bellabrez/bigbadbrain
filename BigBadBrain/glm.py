@@ -89,5 +89,5 @@ def create_multivoxel_X_matrix(brain, dims, beta_len):
                 X = toeplitz(voxel_activity, np.zeros(beta_len))
                 X = np.roll(X, middle)
                 Xs.append(X)
-    out = np.concatenate(np.asarray(Xs),axis=1)
+    out = np.concatenate(Xs,axis=1)
     return out
