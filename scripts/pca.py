@@ -8,7 +8,7 @@ from sklearn.decomposition import PCA
 sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
 import ants
 
-from BigBadBrain.brain import bleaching_correction, z_score_brain, get_resolution
+from BigBadBrain.brain import bleaching_correction, z_score_brain, get_resolution, load_numpy_brain
 from BigBadBrain.utils import load_timestamps, sort_nicely, send_email
 
 class Fly:
@@ -38,7 +38,7 @@ folder = root_path + fly_folders[0]
 
 z_brain_file = os.path.join(folder, 'brain_zscored_green.nii')
 try:
-    brain = load_numpy_brain(z_brain_file, channel=None, flip=False)
+    brain = load_numpy_brain(z_brain_file)
 except:
     brain_file = os.path.join(folder, 'motcorr', 'brain_green.nii')
     brain = load_numpy_brain(brain_file)
