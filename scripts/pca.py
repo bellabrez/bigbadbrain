@@ -57,7 +57,7 @@ for swap in [True, False]:
         X = np.swapaxes(X, 0, 1)
 
     t0 = time()
-    pca = PCA(n_components=2)
+    pca = PCA(n_components=100)
     #PCs = pca.fit_transform(X)
     pca.fit(X)
 
