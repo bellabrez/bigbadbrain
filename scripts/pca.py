@@ -36,11 +36,11 @@ folder = root_path + fly_folders[0]
 
 ### Load Brain ###
 
-z_brain_file = os.path.join(folder, 'brain_z.nii')
+z_brain_file = os.path.join(folder, 'brain_zscored_green.nii')
 try:
     brain = load_numpy_brain(z_brain_file, channel=None, flip=False)
 except:
-    brain_file = os.path.join(folder, 'motcorr', brain_green.nii)
+    brain_file = os.path.join(folder, 'motcorr', 'brain_green.nii')
     brain = load_numpy_brain(brain_file)
     brain = bleaching_correction(brain)
     brain = z_score_brain(brain)
