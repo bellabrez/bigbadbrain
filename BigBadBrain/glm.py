@@ -43,7 +43,7 @@ def fit_glm(brain, dims, fictrac, beta_len):
     return scores, betas
 
 @timing
-def save_glm_map(scores_vol, betas_vol, folder, channel, behavior='speed'):
+def save_glm_map(scores_vol, betas_vol, folder, channel, behavior='speed',fictrac_sigma=3):
     print('\n~~ Saving GLM ~~')
     sys.stdout.flush()
 
@@ -54,13 +54,13 @@ def save_glm_map(scores_vol, betas_vol, folder, channel, behavior='speed'):
         os.makedirs(directory)
  
     # Save scores
-    file = 'multivariate_analysis_' + channel + '_' + behavior + '.nii'
+    file = 'multivariate_analysis_' + channel + '_' + behavior + '_fictracsigma' + str(fictrac_sigma) + '.nii'
     save_file = os.path.join(directory, file)
     brain_to_save = np.swapaxes(scores_vol, 0, 2)
     ants.image_write(ants.from_numpy(brain_to_save), save_file)
 
     # Save betas
-    file = 'multivariate_analysis_betas_' + channel + '_' + behavior + '.nii'
+    file = 'multivariate_analysis_betas_' + channel + '_' + behavior + '_fictracsigma' + str(fictrac_sigma) + '.nii'
     save_file = os.path.join(directory, file)
     brain_to_save = np.swapaxes(betas_vol, 0, 2)
     ants.image_write(ants.from_numpy(brain_to_save), save_file)
