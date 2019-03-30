@@ -24,7 +24,7 @@ dur = 30 * 60 * 1000 # experiment duration in ms
 vols_to_clip = 200
 channels = ['green']
 behaviors = ['dRotLabY', 'dRotLabZ', 'speed'] #'dRotLabX', 'dRotLabY', 'speed'
-fictrac_sigmas = [5,10,20]
+fictrac_sigmas = [5,10,20,50]
 
 #######################
 ### Loop over flies ###
