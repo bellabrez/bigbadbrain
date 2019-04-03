@@ -14,7 +14,7 @@ from BigBadBrain.glm import fit_glm, save_glm_map
 from BigBadBrain.motcorr import get_motcorr_brain
 
 root_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
-desired_flies = [25] # 1 index
+desired_flies = [27] # 1 index
 deprecated_motcorr = False
 folders = get_fly_folders(root_path, desired_flies)
 
@@ -23,8 +23,8 @@ fps = 50 #of fictrac camera
 dur = 30 * 60 * 1000 # experiment duration in ms
 vols_to_clip = 200
 channels = ['green']
-behaviors = ['dRotLabY', 'dRotLabZ', 'speed'] #'dRotLabX', 'dRotLabY', 'speed'
-fictrac_sigmas = [5,10,20,50]
+behaviors = ['speed'] #'dRotLabX', 'dRotLabY', 'speed'
+fictrac_sigmas = [3]
 
 #######################
 ### Loop over flies ###
@@ -34,7 +34,7 @@ for fly_idx, folder in enumerate(folders):
     
     ### Send email and define folder path ###
     function_durations = []
-    print('\n ~~~~ Starting analysis of {} ~~~~'.format(folder))
+    print('\n~~~~ Starting analysis of {} ~~~~'.format(folder))
     sys.stdout.flush()
     send_email('Starting {} ({} of {}).'.format(folder, fly_idx+1, len(folders)), 'wow')
 
@@ -51,7 +51,9 @@ for fly_idx, folder in enumerate(folders):
 
     for channel in channels:
 
+        ##################
         ### Load brain ###
+        ##################
         print('\n~~ Loading Brain ~~')
         sys.stdout.flush()
         zbrain_file = os.path.join(folder, 'brain_zscored_' + channel + '.nii')
@@ -68,11 +70,6 @@ for fly_idx, folder in enumerate(folders):
                 dims = get_dims(brain)
             else:
                 brain, dims = get_motcorr_brain(folder, channel=channel)
-
-            # remove first bit of data since it often has some weirdness
-            #brain = brain[:,:,:,vols_to_clip:]
-            #dims['t'] = brain.shape[3]
-            #print('brain shape: {}'.format(brain.shape))
 
             ### Bleaching correction (per voxel) ###
             brain = bleaching_correction(brain)
