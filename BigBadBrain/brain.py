@@ -90,7 +90,9 @@ def get_resolution(xml_file):
 @timing
 def bleaching_correction(brain):
     print('\n~~ Performing bleaching correction ~~')
+    print('brain_shape: {}'.format(np.shape(brain)))
     sys.stdout.flush()
+
     smoothed = scipy.ndimage.gaussian_filter1d(brain,sigma=200,axis=3,truncate=1)
     brain = brain - smoothed
     return brain
