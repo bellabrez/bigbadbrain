@@ -93,7 +93,7 @@ def bleaching_correction(brain):
     print('brain_shape: {}'.format(np.shape(brain)))
     sys.stdout.flush()
 
-    smoothed = scipy.ndimage.gaussian_filter1d(brain,sigma=200,axis=3,truncate=1)
+    smoothed = scipy.ndimage.gaussian_filter1d(brain,sigma=200,axis=-1,truncate=1)
     brain = brain - smoothed
     return brain
 
