@@ -2,8 +2,10 @@ import numpy as np
 import os
 import sys
 import h5py
+import matplotlib.pyplot as plt
 
 def load_visual_stimuli_data(vision_path):
+    print('loading visual stimuli data... ',end='')
     stimuli = np.load(os.path.join(vision_path, 'stimuli_master.npy'))
 
     # remove grey_stimuli
@@ -11,6 +13,8 @@ def load_visual_stimuli_data(vision_path):
 
     # get unique stimuli
     unique_stimuli = [dict(y) for y in set(tuple(x.items()) for x in stimuli)]
+
+    print('done')
 
     return stimuli, unique_stimuli
 
