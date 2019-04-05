@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import sys
+import h5py
 
 def load_visual_stimuli_data(vision_path):
     stimuli = np.load(os.path.join(vision_path, 'stimuli_master.npy'))
