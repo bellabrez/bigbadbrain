@@ -39,8 +39,10 @@ def fit_visual_glm(brain, dims, stimulus, timestamps, bins):
                     model.fit(X, Y)
                     betas.append(model.coef_)
                     scores.append(model.score(X,Y))
+    print('shape of betas: {}'.format(np.shape(betas)))
+    print('len of bins: {}'.format(len(bins)))
     scores = np.reshape(scores, (dims['z'], dims['x'], dims['y']))
-    betas = np.reshape(betas, (dims['z'], dims['x'], dims['y'], beta_len))
+    betas = np.reshape(betas, (dims['z'], dims['x'], dims['y'], len(bins)-1))
     return scores, betas
 
 def create_bins(bin_size,pre_dur,post_dur):
