@@ -89,7 +89,7 @@ for fly_idx, folder in enumerate(folders):
         for stimulus in unique_stimuli:
 
                 ### Fit GLM ###
-                scores, betas = fit_visual_glm(brain, dims, stimulus, bins)
+                scores, betas = fit_visual_glm(brain, dims, stimulus, timestamps, bins)
 
                 ### Save brain ###
                 save_glm_map(scores, betas, folder, channel, param=str(stimulus[angle]))

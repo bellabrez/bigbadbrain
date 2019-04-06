@@ -10,7 +10,7 @@ sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/
 import ants
 
 @timing
-def fit_visual_glm(brain, dims, stimulus, bins):
+def fit_visual_glm(brain, dims, stimulus, timestamps, bins):
     print('\n~~ Fitting GLM ~~')
     print('Z-slice progress (out of {}): '.format(dims['z']), end='')
     sys.stdout.flush()
