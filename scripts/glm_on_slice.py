@@ -69,7 +69,7 @@ for fly_idx, folder in enumerate(folders):
             fictrac_interp = prep_fictrac(fictrac, timestamps, fps, dur, behavior=behavior)
         
             ### Fit GLM ###
-            scores, betas = fit_glm(brain, dims, fictrac_interp, beta_len)
+            scores, betas = fit_glm(brain, dims, fictrac_interp, beta_len, single_slice=True)
 
             ### Save brain ###
             behavior='denoised_speed'
