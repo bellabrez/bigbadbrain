@@ -10,7 +10,7 @@ import ants
 from BigBadBrain.brain import bleaching_correction, z_score_brain, get_resolution, save_brain, load_numpy_brain, get_dims
 from BigBadBrain.fictrac import load_fictrac, prep_fictrac
 from BigBadBrain.utils import load_timestamps, get_fly_folders, send_email
-from BigBadBrain.glm import fit_visual_glm, save_glm_map
+from BigBadBrain.glm import fit_visual_glm, save_glm_map, create_bins
 from BigBadBrain.motcorr import get_motcorr_brain
 from BigBadBrain.visual import load_photodiode, load_visual_stimuli_data, parse_stim_starts_photodiode, set_unique_stimuli_display_times
 
