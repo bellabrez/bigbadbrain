@@ -16,6 +16,8 @@ def fit_visual_glm(brain, dims, stimulus, timestamps, bins):
     sys.stdout.flush()
 
     stimuli_times = stimulus['times']
+    betas = []
+    scores = []
 
     for z in range(dims['z']):
 
