@@ -68,7 +68,7 @@ def create_visual_X(stimuli_times, voxel_times, bins):
     return X
 
 @timing
-def fit_glm(brain, dims, fictrac, beta_len):
+def fit_glm(brain, dims, fictrac, beta_len, single_slice=False):
     print('\n~~ Fitting GLM ~~')
     print('Z-slice progress (out of {}): '.format(dims['z']), end='')
     sys.stdout.flush()
@@ -89,7 +89,10 @@ def fit_glm(brain, dims, fictrac, beta_len):
         Y = fictrac[:,z]
         for x in range(dims['x']):
             for y in range(dims['y']):
-                voxel_activity = brain[y,x,z,:]
+                if single_slice:
+                    voxel_activity = brain[y,x,:]
+                else:
+                    voxel_activity = brain[y,x,z,:]
                 X = toeplitz(voxel_activity, np.zeros(beta_len))
                 X = np.roll(X, middle)
                 model = LassoLarsIC(criterion='bic')
