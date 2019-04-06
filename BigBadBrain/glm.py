@@ -10,14 +10,72 @@ sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/
 import ants
 
 @timing
+def fit_visual_glm(brain, dims, stimulus, bins):
+    print('\n~~ Fitting GLM ~~')
+    print('Z-slice progress (out of {}): '.format(dims['z']), end='')
+    sys.stdout.flush()
+
+    stimuli_times = stimulus['times']
+
+    for z in range(dims['z']):
+
+            ### Printing updates ###
+            if z == dims['z']-1:
+                print('{}.'.format(z))
+                sys.stdout.flush()
+            else:
+                print('{}, '.format(z), end = '')
+                sys.stdout.flush()
+
+            voxel_times = timestamps[:,z]
+            X = create_visual_X(stimuli_times, voxel_times, bins)
+            
+            for x in range(dims['x']):
+                for y in range(dims['y']):
+                    Y = brain[y,x,z,:]
+                    model = LassoLarsIC(criterion='bic')
+                    model.fit(X, Y)
+                    betas.append(model.coef_)
+                    scores.append(model.score(X,Y))
+        scores = np.reshape(scores, (dims['z'], dims['x'], dims['y']))
+        betas = np.reshape(betas, (dims['z'], dims['x'], dims['y'], beta_len))
+        return scores, betas
+
+def create_bins(bin_size,pre_dur,post_dur):
+    bins_pre = np.flip(np.arange(0,pre_dur-1,-bin_size),axis=0)
+    bins_post = np.arange(0,post_dur+1,bin_size)
+    bins = np.unique(np.concatenate((bins_pre, bins_post)))
+    return bins
+
+def create_visual_X(stimuli_times, voxel_times, bins):
+    ### Get vector that assigns voxel activities to bins ###
+    # Create real-time bins for each stimulus presentation
+    time_bins = np.add.outer(stimuli_times,bins)
+    time_bins_flat = np.reshape(time_bins,time_bins.shape[0]*time_bins.shape[1])
+    # Find which bin each voxel timestamp belongs to
+    binned = np.searchsorted(time_bins_flat, voxel_times)
+    # The mod will give numbers that match bin numbers
+    bin_mod = binned%21
+
+    ### Use bin vector to create X matrix ###
+    X = np.zeros((len(bin_mod), len(bins)))
+    # This is used to correct index into X
+    axis = np.arange(0,len(bin_mod))
+    # For each row of X, put a 1 in the correct column (bin) if that row gets one
+    X[axis,bin_mod] = 1
+    # Remove first column, which is nonsense
+    X = X[:,1:]
+    return X
+
+@timing
 def fit_glm(brain, dims, fictrac, beta_len):
     print('\n~~ Fitting GLM ~~')
+    print('Z-slice progress (out of {}): '.format(dims['z']), end='')
+    sys.stdout.flush()
     sys.stdout.flush()
     middle = int((beta_len - 1) / 2)
     betas = []
     scores = []
-    print('Z-slice progress (out of {}): '.format(dims['z']), end='')
-    sys.stdout.flush()
     for z in range(dims['z']):
 
         ### Printing updates ###
@@ -43,7 +101,7 @@ def fit_glm(brain, dims, fictrac, beta_len):
     return scores, betas
 
 @timing
-def save_glm_map(scores_vol, betas_vol, folder, channel, behavior='speed',fictrac_sigma=3):
+def save_glm_map(scores_vol, betas_vol, folder, channel, param=None):
     print('\n~~ Saving GLM ~~')
     sys.stdout.flush()
 
@@ -54,13 +112,13 @@ def save_glm_map(scores_vol, betas_vol, folder, channel, behavior='speed',fictra
         os.makedirs(directory)
  
     # Save scores
-    file = 'multivariate_analysis_' + channel + '_' + behavior + '_fictracsigma' + str(fictrac_sigma) + '.nii'
+    file = 'multivariate_analysis_' + channel + '_' + param + '.nii'
     save_file = os.path.join(directory, file)
     brain_to_save = np.swapaxes(scores_vol, 0, 2)
     ants.image_write(ants.from_numpy(brain_to_save), save_file)
 
     # Save betas
-    file = 'multivariate_analysis_betas_' + channel + '_' + behavior + '_fictracsigma' + str(fictrac_sigma) + '.nii'
+    file = 'multivariate_analysis_betas_' + channel + '_' + param + '.nii'
     save_file = os.path.join(directory, file)
     brain_to_save = np.swapaxes(betas_vol, 0, 2)
     ants.image_write(ants.from_numpy(brain_to_save), save_file)

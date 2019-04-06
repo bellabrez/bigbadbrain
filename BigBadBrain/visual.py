@@ -59,6 +59,11 @@ def load_h5py_pd_data(folder):
     print('done')
     return t, pd1, pd2
 
+def set_unique_stimuli_display_times(unique_stimuli, stimuli, stimuli_starts):
+    for unique_stimulus in unique_stimuli:
+        unique_stimulus['times'] = [stimuli_starts[i] for i, x in enumerate(stimuli) if x == unique_stimulus]
+    return unique_stimuli
+
 def get_pd_thresh(pd):
     _, bins, _ = plt.hist(pd,bins=5)
     plt.close()
