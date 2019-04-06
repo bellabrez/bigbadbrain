@@ -15,7 +15,7 @@ from BigBadBrain.motcorr import get_motcorr_brain
 from BigBadBrain.visual import load_photodiode, load_visual_stimuli_data, parse_stim_starts_photodiode, set_unique_stimuli_display_times
 
 root_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
-desired_flies = [28] # 1 index
+desired_flies = [27] # 1 index
 deprecated_motcorr = False
 folders = get_fly_folders(root_path, desired_flies)
 
