@@ -72,5 +72,5 @@ for fly_idx, folder in enumerate(folders):
             scores, betas = fit_glm(brain, dims, fictrac_interp, beta_len, single_slice=True)
 
             ### Save brain ###
-            behavior='denoised_speed'
-            save_glm_map(scores, betas, folder, channel, behavior=behavior, fictrac_sigma=sigma)
+            param='denoised_speed'
+            save_glm_map(scores, betas, folder, channel, param=behavior)
