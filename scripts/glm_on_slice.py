@@ -58,7 +58,7 @@ for fly_idx, folder in enumerate(folders):
         sys.stdout.flush()
         file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/fly_25/denoise/denoised_8_4.nii'
         brain = load_numpy_brain(file)
-        dims = {'x': 128, 'y': 92, 'z': 1}
+        dims = {'x': 92, 'y': 128, 'z': 1}
         
         ###########################
         ### Loop over behaviors ###
