@@ -73,4 +73,4 @@ for fly_idx, folder in enumerate(folders):
 
             ### Save brain ###
             param='denoised_speed'
-            save_glm_map(scores, betas, folder, channel, param=behavior)
+            save_glm_map(scores, betas, folder, channel, param=param)

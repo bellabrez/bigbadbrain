@@ -66,6 +66,7 @@ for fly_idx, folder in enumerate(folders):
             # Try to load z-scored brain
             brain = load_numpy_brain(zbrain_file)
             dims = get_dims(brain)
+            print('Success.')
         except:
             print('Failed. Trying to load motion corrected brain.')
             if deprecated_motcorr:
@@ -88,8 +89,8 @@ for fly_idx, folder in enumerate(folders):
 
         for stimulus in unique_stimuli:
 
-                ### Fit GLM ###
-                scores, betas = fit_visual_glm(brain, dims, stimulus, timestamps, bins)
+            ### Fit GLM ###
+            scores, betas = fit_visual_glm(brain, dims, stimulus, timestamps, bins)
 
-                ### Save brain ###
-                save_glm_map(scores, betas, folder, channel, param=str(stimulus[angle]))
+            ### Save brain ###
+            save_glm_map(scores, betas, folder, channel, param=str(stimulus['angle']))
