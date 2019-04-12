@@ -58,10 +58,10 @@ def load_fictrac(directory, file='fictrac.dat'):
         fictrac_data = df
                 
     # sanity check for extremely high speed (fictrac failure)
-    #speed = np.asarray(fictrac_data['speed'])
-    #max_speed = np.max(speed)
-    #if max_speed > 10:
-    #    raise Exception('Fictrac ball tracking failed (reporting impossibly high speed).')
+    speed = np.asarray(fictrac_data['speed'])
+    max_speed = np.max(speed)
+    if max_speed > 10:
+        raise Exception('Fictrac ball tracking failed (reporting impossibly high speed).')
     return fictrac_data
 
 @timing

@@ -14,7 +14,7 @@ from BigBadBrain.glm import fit_glm, save_glm_map
 from BigBadBrain.motcorr import get_motcorr_brain
 
 root_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
-desired_flies = [29] # 1 index
+desired_flies = [30] # 1 index
 folders = get_fly_folders(root_path, desired_flies)
 
 beta_len = 21 #MUST BE ODD
