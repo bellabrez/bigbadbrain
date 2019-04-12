@@ -7,13 +7,11 @@ import scipy
 sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
 import ants
 
-# from BigBadBrain.brain import bleaching_correction, z_score_brain, get_resolution, save_brain, load_numpy_brain, get_dims
-# from BigBadBrain.fictrac import load_fictrac, interpolate_fictrac
-# from BigBadBrain.utils import load_timestamps, get_fly_folders, send_email, get_z_brain, announce_start
-# from BigBadBrain.glm import fit_glm, save_glm_map
-# from BigBadBrain.motcorr import get_motcorr_brain
-
-import BigBadBrain
+from BigBadBrain.brain import bleaching_correction, z_score_brain, get_resolution, save_brain, load_numpy_brain, get_dims
+from BigBadBrain.fictrac import load_fictrac, interpolate_fictrac
+from BigBadBrain.utils import load_timestamps, get_fly_folders, send_email, get_z_brain, announce_start
+from BigBadBrain.glm import fit_glm, save_glm_map
+from BigBadBrain.motcorr import get_motcorr_brain
 
 root_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
 desired_flies = [29] # 1 index

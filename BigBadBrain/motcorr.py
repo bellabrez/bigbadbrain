@@ -80,7 +80,7 @@ def motion_correction(brain_master, brain_slave, directory, motcorr_directory):
     save_motCorr_brain(motCorr_brain_slave, motcorr_directory, suffix='green')
 
     transform_matrix = save_transform_files(transforms, motcorr_directory)
-    save_motion_figure(transform_matrix, director, motcorr_directory)
+    save_motion_figure(transform_matrix, directory, motcorr_directory)
 
 @timing
 def save_transform_files(transforms, motcorr_directory):
