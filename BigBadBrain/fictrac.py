@@ -66,7 +66,7 @@ def load_fictrac(directory, file='fictrac.dat'):
 
 @timing
 def interpolate_fictrac(fictrac, timestamps, fps, dur, behavior='speed',sigma=3):
-     """ Interpolate fictrac.
+    """ Interpolate fictrac.
 
     Parameters
     ----------

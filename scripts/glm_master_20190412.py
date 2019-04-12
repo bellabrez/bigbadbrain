@@ -49,7 +49,7 @@ for fly_idx, folder in enumerate(folders):
         #timestamps = timestamps[vols_to_clip:,:]
         
         ### Load fictrac ###
-        fictrac = load_fictrac(directory)
+        #fictrac = load_fictrac(directory)
         
         ##########################
         ### Loop over channels ###
