@@ -21,9 +21,8 @@ folders = get_fly_folders(root_path, desired_flies)
 
 channels = ['green']
 bin_size = 100 #in ms
-pre_dur = -500 #in ms
+pre_dur = 500 #in ms
 post_dur = 1500 #in ms
-bins = create_bins(bin_size,pre_dur,post_dur)
 
 #######################
 ### Loop over flies ###
@@ -42,11 +41,7 @@ for fly_idx, folder in enumerate(folders):
     #timestamps = timestamps[vols_to_clip:,:]
     
     ### Load visual stimuli ###
-    vision_path = os.path.join(folder,'visual')
-    t,pd1,pd2 = load_photodiode(vision_path)
-    stimuli, unique_stimuli = load_visual_stimuli_data(vision_path)
-    stimuli_starts = parse_stim_starts_photodiode(pd1,stimuli)
-    unique_stimuli = set_unique_stimuli_display_times(unique_stimuli, stimuli, stimuli_starts)
+    unique_stimuli = get_stimuli(folder)
     
     ##########################
     ### Loop over channels ###
@@ -90,7 +85,7 @@ for fly_idx, folder in enumerate(folders):
         for stimulus in unique_stimuli:
 
             ### Fit GLM ###
-            scores, betas = fit_visual_glm(brain, dims, stimulus, timestamps, bins)
+            scores, betas = fit_visual_glm(brain, stimulus, timestamps, bin_size, pre_dur, post_dur)
 
             ### Save brain ###
             save_glm_map(scores, betas, folder, channel, param=str(stimulus['angle']))

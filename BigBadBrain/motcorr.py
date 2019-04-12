@@ -4,49 +4,60 @@ import sys
 from time import time
 import matplotlib.pyplot as plt
 
-from BigBadBrain.brain import get_resolution, get_dims, load_numpy_brain
+from BigBadBrain.brain import get_resolution, get_dims, load_numpy_brain, make_meanbrain
 from BigBadBrain.utils import timing
 
 sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
 import ants
 
-def align_volume(fixed, moving, vol):        
+def align_volume(fixed, moving, vol):
+    """ Aligns a single 3D volume to another using antspy.
+
+    Parameters
+    ----------
+    fixed: 3D antspy object to be warped to.
+    moving: 4D antspy object to warp
+    vol: int, time point of moving brain to warp
+
+    Returns
+    -------
+    motCorr_vol: dictionary containing warped 3D antspy object
+
+    """
     moving_vol = ants.from_numpy(moving[:,:,:,vol])
     motCorr_vol = ants.registration(fixed, moving_vol, type_of_transform='SyN')
     return motCorr_vol
 
-def save_motCorr_brain(brain, folder, suffix):
-    brain = np.moveaxis(np.asarray(brain),0,3)
-    motCorr_brain_ants = ants.from_numpy(brain)
-    save_file = os.path.join(folder, 'motcorr_' + suffix + '.nii')
-    ants.image_write(motCorr_brain_ants, save_file)
-    return motCorr_brain_ants
+
 
 @timing
-def motion_correction(brain_master=None, brain_slave=None, folder=None, subfolder=None):
-    directory = os.path.join(folder, subfolder)
-    if brain_master is None:
-        raise Exception('Must supply brain_master.')
-    elif brain_master is not None and brain_slave is not None and np.shape(brain_master) != np.shape(brain_slave):
-        raise Exception('Dimensions of master and slave brain must match.')
+def motion_correction(brain_master, brain_slave, directory, motcorr_directory):
+    """ Performs non-linear warping of each red brain volume to the red temporal meanbrain,
+    and duplicates this to the green channel.
+
+    Parameters
+    ----------
+    brain_master: [y,x,z,t] numpy array of red channel
+    brain_slave: [y,x,z,t] numpy array of green channel. This we be warped based on red channel.
+    directory: full path of main fly folder
+    motcorr_directory: full path to motcorr subdirectory
+
+    Returns
+    -------
+    Nothing. """
     
     # Make mean brain
-    print('Creating meanbrain...', end='')
-    sys.stdout.flush()
-    t = time()
-    meanbrain = ants.from_numpy(np.mean(brain_master, axis=-1))
-    print('Done. Duration: {:.1f}s'.format(time()-t))
-    sys.stdout.flush()
+    meanbrain = ants.from_numpy(make_meanbrain(brain_master))
+    dims = get_dims(brain_master)
 
     # Align each time volume to the meanbrain
     motCorr_brain_master = []
     motCorr_brain_slave = []
     transforms = []
-
     print('Performing motion correction...')
     sys.stdout.flush()
-    for i in range(np.shape(brain_master)[3]):
-        print('Aligning brain volume {} of {}...'.format(i+1, np.shape(brain_master)[3]), end='')
+    for i in range(dims['t']):
+        print('Aligning brain volume {} of {}...'.format(i+1, dims['t']), end='')
         sys.stdout.flush()
         t0 = time()
         
@@ -56,29 +67,24 @@ def motion_correction(brain_master=None, brain_slave=None, folder=None, subfolde
         transforms.append(motCorr_vol_master['fwdtransforms'])
         
         #Then, use warp parameters on slave volume
-        if brain_slave is not None:
-            fixed = meanbrain
-            moving = ants.from_numpy(brain_slave[:,:,:,i])
-            transformlist = motCorr_vol_master['fwdtransforms']
-            motCorr_brain_slave.append(ants.apply_transforms(fixed,moving,transformlist).numpy())
+        fixed = meanbrain
+        moving = ants.from_numpy(brain_slave[:,:,:,i])
+        transformlist = motCorr_vol_master['fwdtransforms']
+        motCorr_brain_slave.append(ants.apply_transforms(fixed,moving,transformlist).numpy())
         
         print('Done. Duration: {:.1f}s'.format(time()-t0))
         sys.stdout.flush()
 
-    # Save motcorr brain(s)
-    print('Saving brain...', end='')
-    sys.stdout.flush()
-    t = time()
-    brain_master_motCorr = save_motCorr_brain(motCorr_brain_master, directory, suffix='red')
-    
-    if brain_slave is not None:
-        brain_slave_motCorr = save_motCorr_brain(motCorr_brain_slave, directory, suffix='green')
-    print('Done. Duration: {:.1f}s'.format(time()-t))
-    sys.stdout.flush()
+    # Save motcorr brains
+    save_motCorr_brain(motCorr_brain_master, motcorr_directory, suffix='red')
+    save_motCorr_brain(motCorr_brain_slave, motcorr_directory, suffix='green')
 
-    # Organize mat transform file
-    print('Organizing transform file.')
-    sys.stdout.flush()
+    transform_matrix = save_transform_files(transforms, motcorr_directory)
+    save_motion_figure(transform_matrix, director, motcorr_directory)
+
+@timing
+def save_transform_files(transforms, motcorr_directory)
+# Organize mat transform file
     transform_matrix = []
     for i, transform in enumerate(transforms):
         for x in transform:
@@ -88,124 +94,100 @@ def motion_correction(brain_master=None, brain_slave=None, folder=None, subfolde
     transform_matrix = np.array(transform_matrix)
 
     # Save mat transform file
-    print('Saving transform file.')
-    sys.stdout.flush()
-    save_file = os.path.join(directory, 'motcorr_params')
+    save_file = os.path.join(motcorr_directory, 'motcorr_params')
     np.save(save_file,transform_matrix)
+    return transform_matrix
 
+@timing
+def save_motion_figure(transform_matrix, directory, motcorr_directory):
     # Get voxel resolution for figure
-    print('Getting voxel resolution.')
-    sys.stdout.flush()
-    file = os.path.join(folder, 'functional.xml')
+    file = os.path.join(directory, 'functional.xml')
     x_res, y_res, z_res = get_resolution(file)
 
     # Save figure of motion over time
-    print('Saving motion correction figure.')
-    sys.stdout.flush()
-    save_file = os.path.join(directory, 'motion_correction.png')
+    save_file = os.path.join(motcorr_directory, 'motion_correction.png')
     plt.figure(figsize=(10,10))
     plt.plot(transform_matrix[:,9]*x_res, label = 'y') # note, resolutions are switched since axes are switched
     plt.plot(transform_matrix[:,10]*y_res, label = 'x')
     plt.plot(transform_matrix[:,11]*z_res, label = 'z')
     plt.ylabel('Motion Correction, um')
     plt.xlabel('Time')
-    plt.title(folder)
+    plt.title(directory)
     plt.legend()
     plt.savefig(save_file, bbox_inches='tight', dpi=300)
-    
-    if brain_slave is not None:
-        return brain_master_motCorr, brain_slave_motCorr
-    else:
-        return brain_master_motCorr
 
 @timing
-def get_motcorr_brain(folder, channel=None):
-    # Make subfolder if it doesn't exist
+def save_motCorr_brain(brain, directory, suffix):
+    """ Saves a 4D motion corrected brain.
+
+    Parameters
+    ----------
+    brain: 4D antspy brain
+    directory: full directory in which to save the brain
+    suffix: str to add to file name
+
+    Returns
+    -------
+    motCorr_brain_ants: 4D motion corrected ants brain
+
+    """
+    brain = np.moveaxis(np.asarray(brain),0,3)
+    motCorr_brain_ants = ants.from_numpy(brain)
+    save_file = os.path.join(directory, 'motcorr_' + suffix + '.nii')
+    ants.image_write(motCorr_brain_ants, save_file)
+    return motCorr_brain_ants
+
+@timing
+def get_motcorr_brain(directory, channel):
+    """ Tries to load motcorr_brain, otherwise calls motion_correction to create it.
+    Parameters
+    ----------
+    directory: full path
+    channel: str, 'red' (channel 0) or 'green' (channel 1)
+
+    Returns
+    -------
+    brain: [y,x,z,t] numpy array containing motion corrected brain
+
+    """
+    ### Make subfolder if it doesn't exist
     subfolder = 'motcorr'
-    directory = os.path.join(folder, subfolder)
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-    # If it exists, load motion correction brain, else make it
-    if channel == 'green':
-        # try to open motcorr_green, else make it (and make red)
-        try:
-            print('Trying to load green motion-corrected brain.')
-            sys.stdout.flush()
-            brain_file = os.path.join(directory, 'motcorr_green.nii')
-            brain_green = load_numpy_brain(brain_file)
-            print('Loaded green motion-corrected brain.')
-            sys.stdout.flush()
-        except:
-            print('Failed to load green motion-corrected brain.')
-            print('Trying to load functional brain.')
-            sys.stdout.flush()
-            brain_file = folder + '/functional.nii'
-            brain_green = load_numpy_brain(brain_file, channel='green')
-            brain_red = load_numpy_brain(brain_file, channel='red')
-            print('Loaded green and red functional brains.')
-            sys.stdout.flush()
+    motcorr_directory = os.path.join(directory, subfolder)
+    if not os.path.exists(motcorr_directory):
+        os.makedirs(motcorr_directory)
 
-            ### Perform motion correction ###
-            print('Performing motion-correction.')
-            sys.stdout.flush()
-            brain_red, brain_green = motion_correction(brain_master=brain_red, brain_slave=brain_green, folder=folder, subfolder=subfolder)
+    # try to open motion corrected brain, else make it
+    try:
+        print('Trying to load {} motion-corrected brain.'.format(channel))
+        sys.stdout.flush()
+
+        brain_file = os.path.join(motcorr_directory, 'motcorr_{}.nii'.format(channel))
+        brain = load_numpy_brain(brain_file)
+
+        print('Loaded {} motion-corrected brain.'.format(channel))
+        sys.stdout.flush()
+
+        return brain
+
+    except:
+        print('Failed to load {} motion-corrected brain.'.format(channel))
+        print('Trying to load functional brain.')
+        sys.stdout.flush()
+
+        brain_file = os.path.join(directory, 'functional.nii')
+        brain = load_numpy_brain(brain_file)
+
+        print('Loaded functional brain.')
+        print('Brain shape: {}'.format(np.shape(brain)))
+        sys.stdout.flush()
+
+        ### Perform motion correction ###
+        brain = motion_correction(brain_master=brain[:,:,:,:,0],
+                                  brain_slave=brain[:,:,:,:,1],
+                                  directory=directory,
+                                  motcorr_directory=motcorr_directory)
         
-        dims = get_dims(brain_green)
-        return brain_green, dims
-    
-    elif channel == 'red':
-        # try to open motcorr_red, else make it (and make green)
-        try:
-            print('Trying to load red motion-corrected brain.')
-            sys.stdout.flush()
-            brain_file = os.path.join(directory, 'motcorr_red.nii')
-            brain_red = load_numpy_brain(brain_file)
-            print('Loaded red motion-corrected brain.')
-            sys.stdout.flush()
-        except:
-            print('Failed to load red motion-corrected brain.')
-            print('Trying to load functional brain.')
-            sys.stdout.flush()
-            brain_file = folder + '/functional.nii'
-            brain_green = load_numpy_brain(brain_file, channel='green')
-            brain_red = load_numpy_brain(brain_file, channel='red')
-            print('Loaded green and red functional brains.')
-            sys.stdout.flush()
+        brain_file = os.path.join(motcorr_directory, 'motcorr_{}.nii'.format(channel))
+        brain = load_numpy_brain(brain_file)
 
-            ### Perform motion correction ###
-            print('Performing motion-correction.')
-            sys.stdout.flush()
-            brain_red, brain_green = motion_correction(brain_master=brain_red, brain_slave=brain_green, folder=folder, subfolder=subfolder)
-            
-        dims = get_dims(brain_red)
-        return brain_red, dims
-    
-    elif channel == None:
-        # try to open motcorr, else make it
-        try:
-            print('Trying to load motion-corrected brain.')
-            sys.stdout.flush()
-            brain_file = folder + '/motcorr.nii'
-            brain = load_numpy_brain(brain_file)
-            print('Loaded motion-corrected brain.')
-            sys.stdout.flush()
-        except:
-            # next, try loading the functional brain and perform motion correction
-            print('Failed to load motion-corrected brain.')
-            print('Trying to load functional brain.')
-            sys.stdout.flush()
-            brain_file = folder + '/functional.nii'
-            brain_green = load_numpy_brain(brain_file, channel='green')
-            print('Loaded functional brain.')
-            sys.stdout.flush()
-
-            ### Perform motion correction ###
-            print('Performing motion-correction.')
-            sys.stdout.flush()
-            brain_green = motion_correction(brain_master=brain_green, folder=folder, subfolder=subfolder)
-
-        dims = get_dims(brain)
-        return brain, dims
-    
-    else:
-        raise Exception('Invalid channel type.')
+        return brain
