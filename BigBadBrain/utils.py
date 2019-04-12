@@ -107,10 +107,6 @@ def load_timestamps(directory, file='functional.xml'):
     timestamps: [t,z] numpy array of times (in ms) of Bruker imaging frames.
 
     """
-    print('\n~~ Loading Timestamps ~~')
-    sys.stdout.flush()
-
-    # load from h5py if it exists, otherwise load from xml and create h5py
     try:
         print('Trying to load timestamp data from hdf5 file.')
         with h5py.File(os.path.join(directory, 'timestamps.h5'), 'r') as hf:
@@ -199,3 +195,27 @@ def fft_signal(signal, sampling_rate, duration):
     Y = np.fft.fft(y)/n # fft computing and normalization
     Y = Y[range(int(n/2))]
     return y,Y,t
+
+@timing
+def get_z_brain(directory, channel):
+    zbrain_file = os.path.join(directory, 'brain_zscored_' + channel + '.nii')
+    try:
+        print('Trying to load z-scored brain.')
+        brain = load_numpy_brain(zbrain_file)
+    except:
+        print('Failed. Trying to load motion corrected brain.')
+        brain = get_motcorr_brain(directory, channel=channel)
+
+        ### Bleaching correction (per voxel) ###
+        brain = bleaching_correction(brain)
+
+        ### Z-score brain ###
+        brain = z_score_brain(brain)
+        save_brain(zbrain_file, brain)
+    return brain
+
+def announce_start(directory, fly_idx, folders):
+    ### Send email and define folder path ###
+    print('\n~~~~ Starting analysis of {} ~~~~'.format(directory))
+    sys.stdout.flush()
+    send_email('Starting {} ({} of {}).'.format(directory, fly_idx+1, len(folders)), 'wow')
