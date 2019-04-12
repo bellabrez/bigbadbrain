@@ -5,16 +5,39 @@ from scipy.linalg import toeplitz
 from sklearn.linear_model import LassoLarsIC
 
 from BigBadBrain.utils import timing
+from BigBadBrain.brain import get_dims
 
 sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
 import ants
 
 @timing
-def fit_visual_glm(brain, dims, stimulus, timestamps, bins):
-    print('\n~~ Fitting GLM ~~')
+def fit_visual_glm(brain, stimulus, timestamps, bin_size, pre_dur, post_dur):
+    """ Will fit a cross-validated Generalized Linear Model of the relationship between
+    visual stimuli and neural activity.
+
+    More detail to be added later.
+
+    Parameters
+    ----------
+    brain: numpy array [y,x,z,t].
+    stimulus: dictionary of stimulus parameters. Must contain a list of stimulus times called 'times'.
+    timestamps: numpy array of times of Bruker frames. [t,z].
+    bin_size: resolution over which to bin voxel responses (in ms).
+    pre_dur: time before stimuli start to begin glm (in ms).
+    post_dur: time after stimuli start to end glm (in ms).
+
+    Returns
+    -------
+    scores: [y,x,z] numpy array of R2 scores for each voxel.
+    betas: [y,x,z,b] numpy array of betas for each voxel. Betas calculated based on bin parameters.
+
+    """
+
     print('Z-slice progress (out of {}): '.format(dims['z']), end='')
     sys.stdout.flush()
 
+    bins = create_bins(bin_size,pre_dur,post_dur)
+    dims = get_dims(brain)
     stimuli_times = stimulus['times']
     betas = []
     scores = []
@@ -42,16 +65,44 @@ def fit_visual_glm(brain, dims, stimulus, timestamps, bins):
     print('shape of betas: {}'.format(np.shape(betas)))
     print('len of bins: {}'.format(len(bins)))
     scores = np.reshape(scores, (dims['z'], dims['x'], dims['y']))
+    scores = np.swapaxes(scores, 0, 2)
     betas = np.reshape(betas, (dims['z'], dims['x'], dims['y'], len(bins)-1))
+    betas = np.swapaxes(betas, 0, 2)
     return scores, betas
 
 def create_bins(bin_size,pre_dur,post_dur):
-    bins_pre = np.flip(np.arange(0,pre_dur-1,-bin_size),axis=0)
+    """ Helper function to create a bin vector based on parameters.
+
+    Parameters
+    ----------
+    bin_size: resolution over which to bin voxel responses (in ms).
+    pre_dur: time before stimuli start to begin glm (in ms).
+    post_dur: time after stimuli start to end glm (in ms).
+
+    Returns
+    -------
+    bins: 1D numpy array of times (in ms) between bins.
+    i.e., would return [-100,0,100,200] if bin_size=100, pre_dur=100, post_dur=200. """
+
+    bins_pre = np.flip(np.arange(0,-pre_dur-1,-bin_size),axis=0)
     bins_post = np.arange(0,post_dur+1,bin_size)
     bins = np.unique(np.concatenate((bins_pre, bins_post)))
     return bins
 
 def create_visual_X(stimuli_times, voxel_times, bins):
+    """ Helper function to create X matrix for visual stimuli GLM.
+
+    Parameters
+    ----------
+    stimuil_times: list of times (in ms) of stimuli onsets.
+    voxel_times: 1D numpy array of times (in ms) of voxel collection times.
+    bins: 1D numpy array of desired bins (see create_bins).
+
+    Returns
+    -------
+    X: [t,bins] numpy array. Used in fit_visual_glm. All zeros except one where a given voxel collection time
+    (row) falls within a given bin (columns). """
+
     ### Get vector that assigns voxel activities to bins ###
     # Create real-time bins for each stimulus presentation
     time_bins = np.add.outer(stimuli_times,bins)
@@ -72,11 +123,31 @@ def create_visual_X(stimuli_times, voxel_times, bins):
     return X
 
 @timing
-def fit_glm(brain, dims, fictrac, beta_len, single_slice=False):
-    print('\n~~ Fitting GLM ~~')
+def fit_glm(brain, fictrac, beta_len, single_slice=False):
+    """ Will fit a cross-validated Generalized Linear Model of the relationship between 
+    behavior and neural activity.
+
+    Will add more detail later.
+
+    Parameters
+    ----------
+    brain: numpy array [y,x,z,t].
+    fictrac: [t,z] numpy array of values of a given behavior at times interpolated from timestamps (t,z).
+    beta_len: odd int of number of indicies to calculate betas for. Times of indicies are based on imaging rate.
+    Will equally sample both sides of zero.
+    single_slice: Defaults to False. If True, this function can be run on a brain of shape [y,x,t].
+
+    Returns
+    -------
+    scores: [y,x,z] numpy array of R2 scores for each voxel.
+    betas: [y,x,z,b] numpy array of betas for each voxel. Betas calculated based on bin parameters.
+
+    """
+
     print('Z-slice progress (out of {}): '.format(dims['z']), end='')
     sys.stdout.flush()
-    sys.stdout.flush()
+
+    dims = get_dims(brain)
     middle = int((beta_len - 1) / 2)
     betas = []
     scores = []
@@ -104,36 +175,56 @@ def fit_glm(brain, dims, fictrac, beta_len, single_slice=False):
                 betas.append(model.coef_)
                 scores.append(model.score(X,Y))
     scores = np.reshape(scores, (dims['z'], dims['x'], dims['y']))
+    scores = np.swapaxes(scores, 0, 2)
     betas = np.reshape(betas, (dims['z'], dims['x'], dims['y'], beta_len))
+    betas = np.swapaxes(betas, 0, 2)
     return scores, betas
 
 @timing
-def save_glm_map(scores_vol, betas_vol, folder, channel, param=None):
-    print('\n~~ Saving GLM ~~')
-    sys.stdout.flush()
+def save_glm_map(scores, betas, directory, channel, param=None):
+    """ Will save scores and betas (outputs of glms) into nifti files.
+
+    Creates and saves in subdirectory "glm".
+
+    Parameters
+    ----------
+    scores: [y,x,z] numpy array of R2 scores for each voxel.
+    betas: [y,x,z,b] numpy array of betas for each voxel.
+    directory: string of full path to directory into which to save.
+    channel: string to include in file save name.
+    param: string to include in save name.
+
+    Returns
+    -------
+    Nothing. """
 
     # Make subfolder if it doesn't exist
     subfolder = 'glm'
-    directory = os.path.join(folder, subfolder)
+    directory = os.path.join(directory, subfolder)
     if not os.path.exists(directory):
         os.makedirs(directory)
  
     # Save scores
     file = 'multivariate_analysis_' + channel + '_' + param + '.nii'
     save_file = os.path.join(directory, file)
-    brain_to_save = np.swapaxes(scores_vol, 0, 2)
-    ants.image_write(ants.from_numpy(brain_to_save), save_file)
+    ants.image_write(ants.from_numpy(scores), save_file)
 
     # Save betas
     file = 'multivariate_analysis_betas_' + channel + '_' + param + '.nii'
     save_file = os.path.join(directory, file)
-    brain_to_save = np.swapaxes(betas_vol, 0, 2)
-    ants.image_write(ants.from_numpy(brain_to_save), save_file)
+    ants.image_write(ants.from_numpy(betas), save_file)
 
 @timing
 def create_multivoxel_X_matrix(brain, dims, beta_len):
-    print('\n~~ Creating Multivoxel X matrix ~~')
-    sys.stdout.flush()
+    """ In progress attemping to do multivoxel predictions.
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+    """
+
     middle = int((beta_len - 1) / 2)
     Xs = []
     print('Z-slice progress (out of {}): '.format(dims['z']), end='')

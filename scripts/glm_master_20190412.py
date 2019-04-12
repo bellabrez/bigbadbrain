@@ -32,31 +32,6 @@ brain_regions = ['central'] # if None, make it look for folders and do all of th
 #######################
 
 for fly_idx, folder in enumerate(folders):
-    folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/fly_29/optic'
-
-    ### Send email and define folder path ###
-    function_durations = []
-    print('\n~~~~ Starting analysis of {} ~~~~'.format(folder))
-    sys.stdout.flush()
-    send_email('Starting {} ({} of {}).'.format(folder, fly_idx+1, len(folders)), 'wow')
-
-    ### Load timestamps ###
-    timestamps = load_timestamps(folder)
-    #timestamps = timestamps[vols_to_clip:,:]
-    
-    ### Load fictrac ###
-    #fictrac = load_fictrac(root_path, folder)
-    
-    ##########################
-    ### Loop over channels ###
-    ##########################
-
-    for channel in channels:
-
-        ##################
-        ### Load brain ###
-        ##################
-        print('\n~~ Loading Brain ~~')
 
     ########################################
     ### Loop over brain regions (if any) ###

@@ -13,6 +13,17 @@ from scipy.ndimage import imread
 from xml.etree import ElementTree as ET
 
 def send_email(subject='', message=''):
+    """ Sends emails!
+
+    Parameters
+    ----------
+    subject: email subject heading (str)
+    message: body of text (str)
+
+    Returns
+    -------
+    Nothing. """
+
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
     server.login("python.notific@gmail.com", "9!tTT77x!ma8cGy")
@@ -24,13 +35,14 @@ def send_email(subject='', message=''):
     server.sendmail(to, to, msg.as_string())
     server.quit()
 
-def save_duration(name, duration):
-    function_durations.append({'name': name, 'duration': duration})
-
 def timing(f):
+    """ Wrapper function to time how long functions take (and print function name). """
+
     @wraps(f)
     def wrapper(*args, **kwargs):
         start = time()
+        print('\n~~ {} ~~'.format(f.__name__))
+        sys.stdout.flush()
         result = f(*args, **kwargs)
         end = time()
         duration = end-start
@@ -49,38 +61,64 @@ def timing(f):
             duration = duration / 3600
             suffix = 'hr'
 
-        #save_duration(name=f.__name__, duration=duration)
-        print('Duration: {:.2f} {}'.format(duration,suffix))
+        print('Done. Duration: {:.2f} {}'.format(duration,suffix))
         sys.stdout.flush()
         return result
     return wrapper
 
 def alphanum_key(s):
+    """ Tries to change strs to ints. """
     return [tryint(c) for c in re.split('([0-9]+)', s)]
 
 def sort_nicely(x):
+        """
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+
+    """
     x.sort(key=alphanum_key)
     
 def tryint(s):
+    """ Tries to change a single str to an int. """
+
     try:
         return int(s)
     except:
         return s
 
 @timing
-def load_timestamps(folder, file='functional.xml'):
+def load_timestamps(directory, file='functional.xml'):
+    """ Parses a Bruker xml file to get the times of each frame, or loads h5py file if it exists.
+
+    First tries to load from 'timestamps.h5' (h5py file). If this file doesn't exist
+    it will load and parse the Bruker xml file, and save the h5py file for quick loading in the future.
+
+    Parameters
+    ----------
+    directory: full directory that contains xml file (str).
+    file: Defaults to 'functional.xml'
+
+    Returns
+    -------
+    timestamps: [t,z] numpy array of times (in ms) of Bruker imaging frames.
+
+    """
     print('\n~~ Loading Timestamps ~~')
     sys.stdout.flush()
 
     # load from h5py if it exists, otherwise load from xml and create h5py
     try:
         print('Trying to load timestamp data from hdf5 file.')
-        with h5py.File(os.path.join(folder, 'timestamps.h5'), 'r') as hf:
+        with h5py.File(os.path.join(directory, 'timestamps.h5'), 'r') as hf:
             timestamps = hf['timestamps'][:]
 
     except:
         print('Failed. Extracting frame timestamps from bruker xml file.')
-        xml_file = os.path.join(folder, file)
+        xml_file = os.path.join(directory, file)
         tree = ET.parse(xml_file)
         root = tree.getroot()
         timestamps = []
@@ -100,13 +138,26 @@ def load_timestamps(folder, file='functional.xml'):
             timestamps = np.reshape(timestamps, (len(frames), len(sequences)))
 
         ### Save h5py file ###
-        with h5py.File(os.path.join(folder, 'timestamps.h5'), 'w') as hf:
+        with h5py.File(os.path.join(directory, 'timestamps.h5'), 'w') as hf:
             hf.create_dataset("timestamps", data=timestamps)
     
     print('Success.')
     return timestamps
 
 def get_fly_folders(root_path, desired_flies):
+    """ Will create an ordered list of all subdirectories listed in desired_flies.
+
+    Subfolders must contain 'fly' in the name, followed by a fly number (i.e. fly_1).
+
+    Parameters
+    ----------
+    root_path: directory containing fly folders
+    desired_flies: list of ints (1 index) of desired flies.
+
+    Returns
+    -------
+    folders: list of full path to desired fly folders """
+
     fly_folders = sorted(os.listdir(root_path))
     fly_folders = [x for x in fly_folders if 'fly' in x]
     sort_nicely(fly_folders)
@@ -122,6 +173,20 @@ def get_fly_folders(root_path, desired_flies):
     return folders
 
 def fft_signal(signal, sampling_rate, duration):
+    """ Performs FFT on a signal.
+
+    Parameters
+    ----------
+    signal: 1D numpy array
+    sampling_rate: in Hz (I think... check)
+    duration: int (in sec?). Can probably calulate this instead of requiring.
+
+    Returns
+    -------
+    y: signal
+    Y: fft
+    t: times """
+    
     Fs = sampling_rate
     y = signal
     Ts = 1.0/Fs; # sampling interval
