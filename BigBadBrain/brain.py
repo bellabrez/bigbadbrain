@@ -7,7 +7,6 @@ from xml.etree import ElementTree as ET
 import matplotlib.pyplot as plt
 
 from BigBadBrain.utils import timing
-from BigBadBrain.motcorr import get_motcorr_brain
 
 sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
 import ants
