@@ -259,3 +259,21 @@ def get_dims(brain):
 @timing
 def make_meanbrain(brain):
     return np.mean(brain, axis=-1)
+
+@timing
+def get_z_brain(directory, channel):
+    zbrain_file = os.path.join(directory, 'brain_zscored_' + channel + '.nii')
+    try:
+        print('Trying to load z-scored brain.')
+        brain = load_numpy_brain(zbrain_file)
+    except:
+        print('Failed. Trying to load motion corrected brain.')
+        brain = get_motcorr_brain(directory, channel=channel)
+
+        ### Bleaching correction (per voxel) ###
+        brain = bleaching_correction(brain)
+
+        ### Z-score brain ###
+        brain = z_score_brain(brain)
+        save_brain(zbrain_file, brain)
+    return brain
