@@ -8,7 +8,7 @@ sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/
 import ants
 
 from BigBadBrain.brain import bleaching_correction, z_score_brain, get_resolution, save_brain, load_numpy_brain, get_dims
-from BigBadBrain.fictrac import load_fictrac, prep_fictrac
+from BigBadBrain.fictrac import load_fictrac, interpolate_fictrac
 from BigBadBrain.utils import load_timestamps, get_fly_folders, send_email
 from BigBadBrain.glm import fit_glm, save_glm_map
 from BigBadBrain.motcorr import get_motcorr_brain
@@ -92,7 +92,7 @@ for fly_idx, folder in enumerate(folders):
                 for sigma in fictrac_sigmas:
 
                     ### Prep given behavior ###
-                    fictrac_interp = prep_fictrac(fictrac, timestamps, fps, dur, behavior=behavior, sigma=sigma)
+                    fictrac_interp = interpolate_fictrac(fictrac, timestamps, fps, dur, behavior=behavior, sigma=sigma)
                 
                     ### Fit GLM ###
                     scores, betas = fit_glm(brain, dims, fictrac_interp, beta_len)
