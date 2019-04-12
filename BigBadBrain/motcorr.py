@@ -83,7 +83,7 @@ def motion_correction(brain_master, brain_slave, directory, motcorr_directory):
     save_motion_figure(transform_matrix, director, motcorr_directory)
 
 @timing
-def save_transform_files(transforms, motcorr_directory)
+def save_transform_files(transforms, motcorr_directory):
 # Organize mat transform file
     transform_matrix = []
     for i, transform in enumerate(transforms):
