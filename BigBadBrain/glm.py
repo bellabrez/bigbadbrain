@@ -143,11 +143,11 @@ def fit_glm(brain, fictrac, beta_len, single_slice=False):
     betas: [y,x,z,b] numpy array of betas for each voxel. Betas calculated based on bin parameters.
 
     """
-
+    
+    dims = get_dims(brain)
     print('Z-slice progress (out of {}): '.format(dims['z']), end='')
     sys.stdout.flush()
-
-    dims = get_dims(brain)
+    
     middle = int((beta_len - 1) / 2)
     betas = []
     scores = []
