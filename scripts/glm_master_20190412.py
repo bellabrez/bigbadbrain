@@ -9,9 +9,27 @@ import ants
 
 from BigBadBrain.brain import bleaching_correction, z_score_brain, get_resolution, save_brain, load_numpy_brain, get_dims, get_z_brain
 from BigBadBrain.fictrac import load_fictrac, interpolate_fictrac
-from BigBadBrain.utils import load_timestamps, get_fly_folders, send_email, announce_start
+from BigBadBrain.utils import load_timestamps, get_fly_folders, send_email, announce_start, timing
 from BigBadBrain.glm import fit_glm, save_glm_map
 from BigBadBrain.motcorr import get_motcorr_brain
+
+@timing
+def get_z_brain(directory, channel):
+    zbrain_file = os.path.join(directory, 'brain_zscored_' + channel + '.nii')
+    try:
+        print('Trying to load z-scored brain.')
+        brain = load_numpy_brain(zbrain_file)
+    except:
+        print('Failed. Trying to load motion corrected brain.')
+        brain = get_motcorr_brain(directory, channel=channel)
+
+        ### Bleaching correction (per voxel) ###
+        brain = bleaching_correction(brain)
+
+        ### Z-score brain ###
+        brain = z_score_brain(brain)
+        save_brain(zbrain_file, brain)
+    return brain
 
 root_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
 desired_flies = [29, 30] # 1 index
