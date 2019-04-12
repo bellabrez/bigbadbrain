@@ -14,7 +14,7 @@ from BigBadBrain.glm import fit_glm, save_glm_map
 from BigBadBrain.motcorr import get_motcorr_brain
 
 root_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
-desired_flies = [28] # 1 index
+desired_flies = [30] # 1 index
 deprecated_motcorr = False
 folders = get_fly_folders(root_path, desired_flies)
 
@@ -31,7 +31,8 @@ fictrac_sigmas = [3]
 #######################
 
 for fly_idx, folder in enumerate(folders):
-    
+    folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/fly_29/optic'
+
     ### Send email and define folder path ###
     function_durations = []
     print('\n~~~~ Starting analysis of {} ~~~~'.format(folder))
@@ -43,7 +44,7 @@ for fly_idx, folder in enumerate(folders):
     #timestamps = timestamps[vols_to_clip:,:]
     
     ### Load fictrac ###
-    fictrac = load_fictrac(root_path, folder)
+    #fictrac = load_fictrac(root_path, folder)
     
     ##########################
     ### Loop over channels ###
