@@ -50,7 +50,7 @@ for fly_idx, folder in enumerate(folders):
         directory = os.path.join(folder, brain_region)
         announce_start(directory, fly_idx, folders)
         timestamps = load_timestamps(directory)
-        #fictrac = load_fictrac(directory)
+        fictrac = load_fictrac(directory)
         
         for channel in channels:
             brain = get_z_brain(directory, channel)

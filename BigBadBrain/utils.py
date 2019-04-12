@@ -61,7 +61,7 @@ def timing(f):
             duration = duration / 3600
             suffix = 'hr'
 
-        print('Done. Duration: {:.2f} {}'.format(duration,suffix))
+        print('{} done. Duration: {:.2f} {}'.format(f.__name__,duration,suffix))
         sys.stdout.flush()
         return result
     return wrapper
