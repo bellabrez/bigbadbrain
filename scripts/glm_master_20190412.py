@@ -62,7 +62,7 @@ for fly_idx, folder in enumerate(folders):
                     fictrac_interp = interpolate_fictrac(fictrac, timestamps, fps, dur, behavior=behavior, sigma=sigma)
                 
                     ### Fit GLM ###
-                    scores, betas = fit_glm(brain, dims, fictrac_interp, beta_len)
+                    scores, betas = fit_glm(brain, fictrac_interp, beta_len)
 
                     ### Save brain ###
                     save_glm_map(scores, betas, directory, channel, behavior=behavior, fictrac_sigma=sigma)
