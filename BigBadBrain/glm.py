@@ -247,3 +247,32 @@ def create_multivoxel_X_matrix(brain, dims, beta_len):
                 Xs.append(X)
     out = np.concatenate(Xs,axis=1)
     return out
+
+def create_multivoxel_single_X_matrix(brain, dims):
+    """ In progress attemping to do multivoxel predictions.
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+    """
+
+    Xs = []
+    print('Z-slice progress (out of {}): '.format(dims['z']), end='')
+    sys.stdout.flush()
+    for z in range(dims['z']):
+
+        ### Printing updates ###
+        if z == dims['z']-1:
+            print('{}.'.format(z))
+            sys.stdout.flush()
+        else:
+            print('{}, '.format(z), end = '')
+            sys.stdout.flush()
+
+        for x in range(dims['x']):
+            for y in range(dims['y']):
+                Xs.append(brain[y,x,z,:])
+    out = np.concatenate(Xs,axis=1)
+    return out

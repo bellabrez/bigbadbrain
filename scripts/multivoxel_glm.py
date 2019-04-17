@@ -8,10 +8,10 @@ sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/
 import ants
 
 from BigBadBrain.brain import bleaching_correction, z_score_brain, get_resolution, save_brain, load_numpy_brain, get_dims
-from BigBadBrain.fictrac import load_fictrac, prep_fictrac
-from BigBadBrain.utils import load_timestamps, get_fly_folders, send_email
-from BigBadBrain.glm import fit_glm, save_glm_map, create_multivoxel_X_matrix
-from BigBadBrain.motcorr import get_motcorr_brain, motion_correction
+from BigBadBrain.fictrac import load_fictrac, interpolate_fictrac
+from BigBadBrain.utils import load_timestamps, get_fly_folders, send_email, announce_start, timing
+from BigBadBrain.glm import fit_glm, save_glm_map, create_multivoxel_single_X_matrix
+from BigBadBrain.motcorr import get_motcorr_brain
 
 root_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
 desired_flies = [25] # 1 index
@@ -51,6 +51,6 @@ for fly_idx, folder in enumerate(folders):
         save_brain(zbrain_file, brain)
 
     ### Create and save multivoxel X matrix ###
-    X = create_multivoxel_X_matrix(brain, dims, beta_len)
-    save_file = os.path.join(folder, 'big_X')
+    X = create_multivoxel_single_X_matrix(brain, dims)
+    save_file = os.path.join(folder, 'big_X_single')
     np.save(save_file, X)
