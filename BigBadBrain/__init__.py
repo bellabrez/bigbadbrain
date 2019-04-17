@@ -1,2 +1,9 @@
-import brain
-import glm
+from .brain import *
+from .correlation import *
+from .event_triggered import *
+from .fictrac import *
+from .glm import *
+from .brain import *
+from .motcorr import *
+from .utils import *
+from .visual import *
