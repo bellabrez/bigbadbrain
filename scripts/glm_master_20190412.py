@@ -65,4 +65,4 @@ for fly_idx, folder in enumerate(folders):
                     scores, betas = fit_glm(brain, fictrac_interp, beta_len)
 
                     ### Save brain ###
-                    save_glm_map(scores, betas, directory, channel, behavior=behavior, fictrac_sigma=sigma)
+                    save_glm_map(scores, betas, directory, channel, param=behavior)
