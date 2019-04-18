@@ -4,7 +4,7 @@ import numpy as np
 
 from .utils import timing
 from .brain import load_numpy_brain, bleaching_correction, z_score_brain, save_brain
-from .glm import motion_correction
+from .motcorr import motion_correction
 
 @timing
 def get_motcorr_brain(directory, channel):
