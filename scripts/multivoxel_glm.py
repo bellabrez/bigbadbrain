@@ -7,11 +7,7 @@ import scipy
 sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
 import ants
 
-from BigBadBrain.brain import bleaching_correction, z_score_brain, get_resolution, save_brain, load_numpy_brain, get_dims
-from BigBadBrain.fictrac import load_fictrac, interpolate_fictrac
-from BigBadBrain.utils import load_timestamps, get_fly_folders, send_email, announce_start, timing
-from BigBadBrain.glm import fit_glm, save_glm_map, create_multivoxel_single_X_matrix
-from BigBadBrain.motcorr import get_motcorr_brain
+import BigBadBrain as bbb
 
 root_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
 desired_flies = [25] # 1 index
@@ -24,33 +20,17 @@ beta_len = 3 #MUST BE ODD
 
 for fly_idx, folder in enumerate(folders):
     
-    ### Send email and define folder path ###
-    function_durations = []
-    print('\n ~~~~ Starting analysis of {} ~~~~'.format(folder))
-    sys.stdout.flush()
-    send_email('Starting {} ({} of {}).'.format(folder, fly_idx+1, len(folders)), 'wow')
-
-
-    ### Load brain ###
-    print('\n~~ Loading Brain ~~')
-    sys.stdout.flush()
-    z_brain_file = os.path.join(folder, 'brain_zscored_green.nii')
-    try:
-        brain = load_numpy_brain(z_brain_file)
-        dims = get_dims(brain)
-    except:
-        brain_file = os.path.join(folder, 'motcorr', 'motcorr_green.nii')
-        brain = load_numpy_brain(brain_file)
-        dims = get_dims(brain)
-
-        ### Bleaching correction (per voxel) ###
-        brain = bleaching_correction(brain)
-
-        ### Z-score brain ###
-        brain = z_score_brain(brain)
-        save_brain(zbrain_file, brain)
+    directory = folder
+    announce_start(directory, fly_idx, folders)
+    timestamps = load_timestamps(directory)
+    fictrac = load_fictrac(directory)
+    brain = bbb.get_z_brain(directory, channel='green') 
 
     ### Create and save multivoxel X matrix ###
-    X = create_multivoxel_single_X_matrix(brain)
-    save_file = os.path.join(folder, 'big_X_single')
-    np.save(save_file, X)
+    score, betas = bbb.fit_all_voxel_glm(brain, fictrac_interp)
+    save_file = os.path.join(directory, 'big_X_single_betas')
+    print('Score: {}'.format(score))
+    sys.stdout.flush()
+    np.save(save_file, betas)
+    save_file = os.path.join(directory, 'big_X_single_betas.nii')
+    bbb.save_brain(save_file, betas)

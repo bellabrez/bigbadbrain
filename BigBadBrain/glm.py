@@ -260,3 +260,28 @@ def create_multivoxel_single_X_matrix(brain):
     """
     X = np.reshape(brain, (-1,brain.shape[-1]))
     return X
+
+@timing
+def fit_all_voxel_glm(brain, fictrac):
+    
+    dims = get_dims(brain)
+    
+    X = np.swapaxes(np.reshape(brain,(-1,brain.shape[-1])),0,1)
+    print('X shape: {}'.format(X.shape))
+
+    z = 0
+    Y = fictrac[:,z]
+    model = LassoLarsIC(criterion='bic')
+    model.fit(X, Y)
+
+    score = model.score(X,Y)
+
+    print('betas shape: {}'.format(np.shape(model.coef_)))
+    sys.stdout.flush()
+
+    betas = np.reshape(model.coef_, (dims['y'], dims['x'], dims['z']))
+
+    print('betas shape: {}'.format(np.shape(betas)))
+    sys.stdout.flush()
+
+    return score, betas
