@@ -51,6 +51,6 @@ for fly_idx, folder in enumerate(folders):
         save_brain(zbrain_file, brain)
 
     ### Create and save multivoxel X matrix ###
-    X = create_multivoxel_single_X_matrix(brain, dims)
+    X = create_multivoxel_single_X_matrix(brain)
     save_file = os.path.join(folder, 'big_X_single')
     np.save(save_file, X)
