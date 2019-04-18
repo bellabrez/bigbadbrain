@@ -21,9 +21,9 @@ beta_len = 3 #MUST BE ODD
 for fly_idx, folder in enumerate(folders):
     
     directory = folder
-    announce_start(directory, fly_idx, folders)
-    timestamps = load_timestamps(directory)
-    fictrac = load_fictrac(directory)
+    bbb.announce_start(directory, fly_idx, folders)
+    timestamps = bbb.load_timestamps(directory)
+    fictrac = bbb.load_fictrac(directory)
     brain = bbb.get_z_brain(directory, channel='green') 
 
     ### Create and save multivoxel X matrix ###
