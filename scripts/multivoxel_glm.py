@@ -11,7 +11,7 @@ import BigBadBrain as bbb
 
 root_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
 desired_flies = [25] # 1 index
-folders = get_fly_folders(root_path, desired_flies)
+folders = bbb.get_fly_folders(root_path, desired_flies)
 beta_len = 3 #MUST BE ODD
 
 #######################
