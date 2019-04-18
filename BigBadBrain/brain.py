@@ -5,7 +5,6 @@ import scipy
 import nibabel as nib
 from xml.etree import ElementTree as ET
 import matplotlib.pyplot as plt
-
 from BigBadBrain.utils import timing
 
 sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
