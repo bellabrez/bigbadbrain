@@ -51,7 +51,7 @@ for fly_idx, folder in enumerate(folders):
         if behavior:
             fictrac = bbb.load_fictrac(directory)
         if visual:
-            unique_stimuli = bbb.get_stimuli(folder)
+            unique_stimuli = bbb.get_stimuli(directory)
         
         for channel in channels:
             brain = bbb.get_z_brain(directory, channel)
@@ -77,4 +77,4 @@ for fly_idx, folder in enumerate(folders):
                     scores, betas = fit_visual_glm(brain, stimulus, timestamps, bin_size, pre_dur, post_dur)
 
                     ### Save brain ###
-                    save_glm_map(scores, betas, folder, channel, param=str(stimulus['angle']))
+                    save_glm_map(scores, betas, directory, channel, param=str(stimulus['angle']))
