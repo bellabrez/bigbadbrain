@@ -33,14 +33,14 @@ def fit_visual_glm(brain, stimulus, timestamps, bin_size, pre_dur, post_dur):
 
     """
 
-    print('Z-slice progress (out of {}): '.format(dims['z']), end='')
-    sys.stdout.flush()
-
     bins = create_bins(bin_size,pre_dur,post_dur)
     dims = get_dims(brain)
     stimuli_times = stimulus['times']
     betas = []
     scores = []
+
+    print('Z-slice progress (out of {}): '.format(dims['z']), end='')
+    sys.stdout.flush()
 
     for z in range(dims['z']):
 
