@@ -43,19 +43,38 @@ def get_motcorr_brain(directory, channel):
         print('Trying to load functional brain.')
         sys.stdout.flush()
 
-        brain_file = os.path.join(directory, 'functional.nii')
-        brain = load_numpy_brain(brain_file)
+        try:
+            brain_file = os.path.join(directory, 'functional.nii')
+            brain = load_numpy_brain(brain_file)
 
-        print('Loaded functional brain.')
-        print('Brain shape: {}'.format(np.shape(brain)))
-        sys.stdout.flush()
+            print('Loaded functional brain.')
+            print('Brain shape: {}'.format(np.shape(brain)))
+            sys.stdout.flush()
 
-        ### Perform motion correction ###
-        brain = motion_correction(brain_master=brain[:,:,:,:,0],
-                                  brain_slave=brain[:,:,:,:,1],
-                                  directory=directory,
-                                  motcorr_directory=motcorr_directory)
-        
+            ### Perform motion correction ###
+            brain = motion_correction(brain_master=brain[:,:,:,:,0],
+                                      brain_slave=brain[:,:,:,:,1],
+                                      directory=directory,
+                                      motcorr_directory=motcorr_directory)
+        except:
+            print('Failed to load 2 channel functional brain.')
+            print('Trying to load channels separately.')
+            sys.stdout.flush()
+
+            brain_file = os.path.join(directory, 'functional_red.nii')
+            brain_master = load_numpy_brain(brain_file)
+
+            brain_file = os.path.join(directory, 'functional_green.nii')
+            brain_slave = load_numpy_brain(brain_file)
+
+            print('Loaded both channels separately.')
+
+            ### Perform motion correction ###
+            brain = motion_correction(brain_master=brain_master,
+                                      brain_slave=brain_slave,
+                                      directory=directory,
+                                      motcorr_directory=motcorr_directory)
+
         brain_file = os.path.join(motcorr_directory, 'motcorr_{}.nii'.format(channel))
         brain = load_numpy_brain(brain_file)
 

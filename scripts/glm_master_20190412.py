@@ -18,7 +18,7 @@ folders = bbb.get_fly_folders(root_path, desired_flies)
 ### What brain areas and channels? ###
 ######################################
 channels = ['green']
-brain_regions = ['central'] # if not nested, put ''
+brain_regions = ['optic'] # if not nested, put ''
 
 ################################
 ### Perform visual analysis? ###
@@ -31,8 +31,8 @@ post_dur = 1500 #in ms
 ####################################
 ### Perform behavioral analysis? ###
 ####################################
-behavior = False
-behaviors = ['speed'] #'dRotLabX', 'dRotLabY', 'speed'
+behavior = True
+behaviors = ['speed','dRotLabZ'] #'dRotLabX', 'dRotLabY', 'speed'
 fictrac_sigmas = [3]
 beta_len = 21 #MUST BE ODD
 fps = 50 #of fictrac camera
