@@ -74,7 +74,7 @@ for fly_idx, folder in enumerate(folders):
                 for stimulus in unique_stimuli:
 
                     ### Fit GLM ###
-                    scores, betas = fit_visual_glm(brain, stimulus, timestamps, bin_size, pre_dur, post_dur)
+                    scores, betas = bbb.fit_visual_glm(brain, stimulus, timestamps, bin_size, pre_dur, post_dur)
 
                     ### Save brain ###
-                    save_glm_map(scores, betas, directory, channel, param=str(stimulus['angle']))
+                    bbb.save_glm_map(scores, betas, directory, channel, param=str(stimulus['angle']))
