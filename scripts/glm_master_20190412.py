@@ -31,7 +31,7 @@ post_dur = 1500 #in ms
 ####################################
 ### Perform behavioral analysis? ###
 ####################################
-behavior = True
+behavior = False
 behaviors = ['speed','dRotLabZ'] #'dRotLabX', 'dRotLabY', 'speed'
 fictrac_sigmas = [3]
 beta_len = 21 #MUST BE ODD
