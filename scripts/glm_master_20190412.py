@@ -11,7 +11,7 @@ import BigBadBrain as bbb
 ### What flies to run? ###
 ##########################
 root_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
-desired_flies = [29, 30] # 1 index
+desired_flies = [30] # 1 index
 folders = bbb.get_fly_folders(root_path, desired_flies)
 
 ######################################
