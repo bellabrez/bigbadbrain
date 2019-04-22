@@ -30,12 +30,6 @@ for fly_idx, folder in enumerate(folders):
 
         directory = os.path.join(folder, brain_region)
         bbb.announce_start(directory, fly_idx, folders)
-        timestamps = bbb.load_timestamps(directory)
-
-        if behavior:
-            fictrac = bbb.load_fictrac(directory)
-        if visual:
-            unique_stimuli = bbb.get_stimuli(directory)
         
         for channel in channels:
             brain = bbb.get_z_brain(directory, channel)
