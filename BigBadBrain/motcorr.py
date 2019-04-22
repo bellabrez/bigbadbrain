@@ -28,10 +28,36 @@ def align_volume(fixed, moving, vol):
     motCorr_vol = ants.registration(fixed, moving_vol, type_of_transform='SyN')
     return motCorr_vol
 
+def split_if_too_big(f):
+    def wrapper(*args, **kwargs):
+        # If x/y is too big, need to do 1st and 2nd half separately
+        dims = get_dims(brain_master)
+        if dims['x'] > 200:
+            middle_volume = int(dims['t']/2)
 
+            kwargs['start_volume'] = 0
+            kwargs['end_volume'] = middle_volume
+            kwargs['suffix'] = '_first_half'
+            result = f(*args, **kwargs)
+                
+            kwargs['start_volume'] = middle_volume
+            kwargs['end_volume'] = dims['t']
+            kwargs['suffix'] = '_second_half'
+            result = f(*args, **kwargs)
+
+        else:
+            result = f(*args, **kwargs)
+    return wrapper
 
 @timing
-def motion_correction(brain_master, brain_slave, directory, motcorr_directory):
+@split_if_too_big
+def motion_correction(brain_master,
+                      brain_slave,
+                      directory,
+                      motcorr_directory,
+                      start_volume=None,
+                      end_volume=None,
+                      suffix=''):
     """ Performs non-linear warping of each red brain volume to the red temporal meanbrain,
     and duplicates this to the green channel.
 
@@ -56,7 +82,14 @@ def motion_correction(brain_master, brain_slave, directory, motcorr_directory):
     transforms = []
     print('Performing motion correction...')
     sys.stdout.flush()
-    for i in range(dims['t']):
+
+    if start_volume is None:
+        start_volume = 0
+
+    if end_volume is None:
+        end_volume = dims['t']
+
+    for i in range(start_volume, end_volume):
         print('Aligning brain volume {} of {}...'.format(i+1, dims['t']), end='')
         sys.stdout.flush()
         t0 = time()
@@ -76,8 +109,8 @@ def motion_correction(brain_master, brain_slave, directory, motcorr_directory):
         sys.stdout.flush()
 
     # Save motcorr brains
-    save_motCorr_brain(motCorr_brain_master, motcorr_directory, suffix='red')
-    save_motCorr_brain(motCorr_brain_slave, motcorr_directory, suffix='green')
+    save_motCorr_brain(motCorr_brain_master, motcorr_directory, suffix='red'+suffix)
+    save_motCorr_brain(motCorr_brain_slave, motcorr_directory, suffix='green'+suffix)
 
     transform_matrix = save_transform_files(transforms, motcorr_directory)
     save_motion_figure(transform_matrix, directory, motcorr_directory)
