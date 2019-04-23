@@ -240,14 +240,14 @@ def create_stim_triggered_behavior_plot(fictrac,
 
     avg_trace = np.mean(np.asarray(behavior_chunks),axis=0)
     x = np.arange(-pre_stim,post_stim+1,sampling_res)
-
     plt.figure(figsize=(10,10))
     for behavior_chunk in behavior_chunks:
         plt.plot(x,behavior_chunk,color=str(np.random.uniform()))
+    plt.plot(x,avg_trace,linewidth=3,color='r')
+    plt.axvline(0, color='r', linestyle='--')
     plt.ylabel('Z Rotation Velocity, deg/sec')
     plt.xlabel('Time relative to stimulus, ms')
     plt.title(folder)
-    plt.legend()
 
     save_file = os.path.join(folder, 'behavior_STA_{}_angle_{}.png'.format(behavior, stimulus['angle']))
     plt.savefig(save_file, bbox_inches='tight', dpi=300)
