@@ -34,7 +34,7 @@ post_dur = 1500 #in ms
 ####################################
 behavior = True
 use_abs_value = True # Takes the abs value of the behavior
-behaviors = ['dRotLabY','dRotLabZ', 'dRotLabX'] #'dRotLabX', 'dRotLabY', 'speed'
+behaviors = ['dRotLabY','dRotLabZ', 'dRotLabX', 'my_speed', 'speed_all_3'] #'dRotLabX', 'dRotLabY', 'speed'
 fictrac_sigmas = [3]
 beta_len = 21 #MUST BE ODD
 fps = 50 #of fictrac camera
