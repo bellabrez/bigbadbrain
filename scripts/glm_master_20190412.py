@@ -24,7 +24,7 @@ brain_regions = [''] # if not nested, put ''
 ################################
 ### Perform visual analysis? ###
 ################################
-visual = True
+visual = False
 bin_size = 100 #in ms
 pre_dur = 500 #in ms
 post_dur = 1500 #in ms
@@ -32,7 +32,7 @@ post_dur = 1500 #in ms
 ####################################
 ### Perform behavioral analysis? ###
 ####################################
-behavior = False
+behavior = True
 use_abs_value = True # Takes the abs value of the behavior
 behaviors = ['dRotLabY','dRotLabZ', 'dRotLabX'] #'dRotLabX', 'dRotLabY', 'speed'
 fictrac_sigmas = [3]
