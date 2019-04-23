@@ -2,6 +2,8 @@ import numpy as np
 import os
 import sys
 import h5py
+import scipy
+from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 
 from BigBadBrain.utils import create_bins
