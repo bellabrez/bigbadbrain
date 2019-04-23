@@ -65,7 +65,7 @@ def load_fictrac(directory, file='fictrac.dat'):
     return fictrac_data
 
 @timing
-def interpolate_fictrac(fictrac, timestamps, fps, dur, behavior='speed',sigma=3):
+def interpolate_fictrac(fictrac, timestamps, fps, dur, behavior='speed',sigma=3,use_abs_value=False):
     """ Interpolate fictrac.
 
     Parameters
@@ -90,6 +90,8 @@ def interpolate_fictrac(fictrac, timestamps, fps, dur, behavior='speed',sigma=3)
     
     # Smooth
     fictrac_smoothed = scipy.ndimage.filters.gaussian_filter(np.asarray(fictrac[behavior]),sigma=sigma)
+    if use_abs_value:
+      fictrac_smoothed = np.abs(fictrac_smoothed)
     
     # Interpolate
     # Warning: interp1d set to fill in out of bounds times

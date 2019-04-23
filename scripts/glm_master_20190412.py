@@ -12,14 +12,14 @@ import BigBadBrain as bbb
 ##########################
 sys.stdout.flush()
 root_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
-desired_flies = [30] # 1 index
+desired_flies = [25] # 1 index
 folders = bbb.get_fly_folders(root_path, desired_flies)
 
 ######################################
 ### What brain areas and channels? ###
 ######################################
 channels = ['green']
-brain_regions = ['optic'] # if not nested, put ''
+brain_regions = [''] # if not nested, put ''
 
 ################################
 ### Perform visual analysis? ###
@@ -33,7 +33,8 @@ post_dur = 1500 #in ms
 ### Perform behavioral analysis? ###
 ####################################
 behavior = False
-behaviors = ['speed','dRotLabZ'] #'dRotLabX', 'dRotLabY', 'speed'
+use_abs_value = True # Takes the abs value of the behavior
+behaviors = ['dRotLabY','dRotLabZ', 'dRotLabX'] #'dRotLabX', 'dRotLabY', 'speed'
 fictrac_sigmas = [3]
 beta_len = 21 #MUST BE ODD
 fps = 50 #of fictrac camera
@@ -63,13 +64,19 @@ for fly_idx, folder in enumerate(folders):
                     for sigma in fictrac_sigmas:
 
                         ### Prep given behavior ###
-                        fictrac_interp = bbb.interpolate_fictrac(fictrac, timestamps, fps, dur, behavior=behavior, sigma=sigma)
-                    
+                        fictrac_interp = bbb.interpolate_fictrac(fictrac,
+                                                                 timestamps,
+                                                                 fps,
+                                                                 dur,
+                                                                 behavior=behavior,
+                                                                 sigma=sigma,
+                                                                 use_abs_value=use_abs_value)
+
                         ### Fit GLM ###
                         scores, betas = bbb.fit_glm(brain, fictrac_interp, beta_len)
 
                         ### Save brain ###
-                        bbb.save_glm_map(scores, betas, directory, channel, param=behavior)
+                        bbb.save_glm_map(scores, betas, directory, channel, param=behavior+'abs')
 
             if visual:
                 for stimulus in unique_stimuli:
