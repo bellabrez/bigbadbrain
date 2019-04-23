@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import sys
+import psutil
 from time import time
 import matplotlib.pyplot as plt
 
@@ -98,6 +99,8 @@ def motion_correction(brain_master,
 
     for i in range(start_volume, end_volume):
         print('Aligning brain volume {} of {}...'.format(i+1, dims['t']), end='')
+        memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
+        print('Current memory usage: {:.2f}GB'.format(memory_usage))
         sys.stdout.flush()
         t0 = time()
         

@@ -12,19 +12,19 @@ import BigBadBrain as bbb
 ##########################
 sys.stdout.flush()
 root_path = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/'
-desired_flies = [25] # 1 index
+desired_flies = [30] # 1 index
 folders = bbb.get_fly_folders(root_path, desired_flies)
 
 ######################################
 ### What brain areas and channels? ###
 ######################################
 channels = ['green']
-brain_regions = [''] # if not nested, put ''
+brain_regions = ['optic'] # if not nested, put ''
 
 ################################
 ### Perform visual analysis? ###
 ################################
-visual = False
+visual = True
 bin_size = 100 #in ms
 pre_dur = 500 #in ms
 post_dur = 1500 #in ms
@@ -32,7 +32,7 @@ post_dur = 1500 #in ms
 ####################################
 ### Perform behavioral analysis? ###
 ####################################
-behavior = True
+behavior = False
 use_abs_value = True # Takes the abs value of the behavior
 behaviors = ['dRotLabY','dRotLabZ', 'dRotLabX', 'my_speed', 'speed_all_3'] #'dRotLabX', 'dRotLabY', 'speed'
 fictrac_sigmas = [3]
