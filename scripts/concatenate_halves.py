@@ -3,7 +3,7 @@ from time import time
 import os
 import sys
 import scipy
-import psutils
+import psutil
 sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
 import ants
 import BigBadBrain as bbb

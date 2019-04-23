@@ -2,7 +2,7 @@ import os
 import sys
 import numpy as np
 import scipy
-import psutils
+import psutil
 import nibabel as nib
 from xml.etree import ElementTree as ET
 import matplotlib.pyplot as plt
