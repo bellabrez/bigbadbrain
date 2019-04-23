@@ -236,7 +236,7 @@ def create_stim_triggered_behavior_plot(fictrac,
     behavior_chunks = []
     for time in stimulus['times']:
         times = np.arange(time-pre_stim,time+post_stim+1,sampling_res) #+1 is so last time point is included
-        behavior_chunks.append(fictrac_interp_temp(times))
+        behavior_chunks.append(fictrac_interp(times))
 
     avg_trace = np.mean(np.asarray(behavior_chunks),axis=0)
     x = np.arange(pre_stim,post_stim+1,sampling_res)
