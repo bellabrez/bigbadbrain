@@ -80,7 +80,7 @@ def view_brain(brain, slice_idx=None):
         slice_idx = int(brain.shape[-1]/2)
 
     plt.figure(figsize=(10,10))
-    plt.imshow(np.swapaxes(brain,(0,1))[:,:,slice_idx])
+    plt.imshow(np.swapaxes(brain,0,1)[:,:,slice_idx])
     plt.show()
 
 @timing

@@ -87,12 +87,7 @@ def interpolate_fictrac(fictrac, timestamps, fps, dur, behavior='speed',sigma=3,
     
     # Cut off any extra frames (only happened with brain 4)
     fictrac = fictrac[:90000]
-    
-    # Smooth
-    fictrac_smoothed = scipy.ndimage.filters.gaussian_filter(np.asarray(fictrac[behavior]),sigma=sigma)
-    if use_abs_value:
-      fictrac_smoothed = np.abs(fictrac_smoothed)
-    
+ 
     if behavior == 'my_speed':
       dx = np.asarray(fictrac['dRotLabX'])
       dy = np.asarray(fictrac['dRotLabY'])
@@ -100,7 +95,7 @@ def interpolate_fictrac(fictrac, timestamps, fps, dur, behavior='speed',sigma=3,
       dy = scipy.ndimage.filters.gaussian_filter(dy,sigma=3)
       fictrac_smoothed = np.sqrt(dx*dx + dy*dy)
 
-    if behavior == 'speed_all_3':
+    elif behavior == 'speed_all_3':
       dx = np.asarray(fictrac['dRotLabX'])
       dy = np.asarray(fictrac['dRotLabY'])
       dz = np.asarray(fictrac['dRotLabZ'])
@@ -109,6 +104,11 @@ def interpolate_fictrac(fictrac, timestamps, fps, dur, behavior='speed',sigma=3,
       dz = scipy.ndimage.filters.gaussian_filter(dz,sigma=3)
       fictrac_smoothed = np.sqrt(dx*dx + dy*dy + dz*dz)
 
+    else:
+      fictrac_smoothed = scipy.ndimage.filters.gaussian_filter(np.asarray(fictrac[behavior]),sigma=sigma)
+
+    if use_abs_value:
+      fictrac_smoothed = np.abs(fictrac_smoothed)
     # Interpolate
     # Warning: interp1d set to fill in out of bounds times
     fictrac_interp_temp = interp1d(raw_fictrac_times, fictrac_smoothed, bounds_error = False)
