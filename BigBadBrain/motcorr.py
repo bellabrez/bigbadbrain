@@ -31,15 +31,22 @@ def align_volume(fixed, moving, vol):
 def split_if_too_big(f):
     def wrapper(*args, **kwargs):
         # If x/y is too big, need to do 1st and 2nd half separately
-        dims = get_dims(brain_master)
+        dims = get_dims(kwargs['brain_master'])
         if dims['x'] > 200:
+            print('Brain too big to motcorr at once - will do in two parts.')
+            sys.stdout.flush()
+
             middle_volume = int(dims['t']/2)
 
+            print('Starting first half.')
+            sys.stdout.flush()
             kwargs['start_volume'] = 0
             kwargs['end_volume'] = middle_volume
             kwargs['suffix'] = '_first_half'
             result = f(*args, **kwargs)
                 
+            print('Starting second half.')
+            sys.stdout.flush()
             kwargs['start_volume'] = middle_volume
             kwargs['end_volume'] = dims['t']
             kwargs['suffix'] = '_second_half'
