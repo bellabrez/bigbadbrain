@@ -239,7 +239,7 @@ def create_stim_triggered_behavior_plot(fictrac,
         behavior_chunks.append(fictrac_interp(times))
 
     avg_trace = np.mean(np.asarray(behavior_chunks),axis=0)
-    x = np.arange(pre_stim,post_stim+1,sampling_res)
+    x = np.arange(-pre_stim,post_stim+1,sampling_res)
 
     plt.figure(figsize=(10,10))
     for behavior_chunk in behavior_chunks:
