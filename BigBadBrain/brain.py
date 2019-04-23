@@ -2,6 +2,7 @@ import os
 import sys
 import numpy as np
 import scipy
+import psutils
 import nibabel as nib
 from xml.etree import ElementTree as ET
 import matplotlib.pyplot as plt
@@ -58,6 +59,9 @@ def save_brain(file, brain):
     Nothing. """
 
     ants.image_write(ants.from_numpy(brain), file)
+    memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
+    print('Current memory usage: {:.2f}GB'.format(memory_usage))
+    sys.stdout.flush()
 
 def view_brain(brain, slice_idx=None):
     """ Uses matplotlib imshow to view a brain slice.
