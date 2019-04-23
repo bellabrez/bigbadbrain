@@ -4,7 +4,7 @@ import numpy as np
 from scipy.linalg import toeplitz
 from sklearn.linear_model import LassoLarsIC
 
-from BigBadBrain.utils import timing
+from BigBadBrain.utils import timing, create_bins
 from BigBadBrain.brain import get_dims
 
 sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
@@ -69,25 +69,6 @@ def fit_visual_glm(brain, stimulus, timestamps, bin_size, pre_dur, post_dur):
     betas = np.reshape(betas, (dims['z'], dims['x'], dims['y'], len(bins)-1))
     betas = np.swapaxes(betas, 0, 2)
     return scores, betas
-
-def create_bins(bin_size,pre_dur,post_dur):
-    """ Helper function to create a bin vector based on parameters.
-
-    Parameters
-    ----------
-    bin_size: resolution over which to bin voxel responses (in ms).
-    pre_dur: time before stimuli start to begin glm (in ms).
-    post_dur: time after stimuli start to end glm (in ms).
-
-    Returns
-    -------
-    bins: 1D numpy array of times (in ms) between bins.
-    i.e., would return [-100,0,100,200] if bin_size=100, pre_dur=100, post_dur=200. """
-
-    bins_pre = np.flip(np.arange(0,-pre_dur-1,-bin_size),axis=0)
-    bins_post = np.arange(0,post_dur+1,bin_size)
-    bins = np.unique(np.concatenate((bins_pre, bins_post)))
-    return bins
 
 def create_visual_X(stimuli_times, voxel_times, bins):
     """ Helper function to create X matrix for visual stimuli GLM.

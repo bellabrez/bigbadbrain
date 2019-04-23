@@ -200,3 +200,23 @@ def announce_start(directory, fly_idx, folders):
     print('\n~~~~ Starting analysis of {} ~~~~'.format(directory))
     sys.stdout.flush()
     send_email('Starting {} ({} of {}).'.format(directory, fly_idx+1, len(folders)), 'wow')
+
+
+def create_bins(bin_size, pre_dur, post_dur):
+    """ Helper function to create a bin vector based on parameters.
+
+    Parameters
+    ----------
+    bin_size: resolution over which to bin voxel responses (in ms).
+    pre_dur: time before stimuli start to begin glm (in ms).
+    post_dur: time after stimuli start to end glm (in ms).
+
+    Returns
+    -------
+    bins: 1D numpy array of times (in ms) between bins.
+    i.e., would return [-100,0,100,200] if bin_size=100, pre_dur=100, post_dur=200. """
+
+    bins_pre = np.flip(np.arange(0,-pre_dur-1,-bin_size),axis=0)
+    bins_post = np.arange(0,post_dur+1,bin_size)
+    bins = np.unique(np.concatenate((bins_pre, bins_post)))
+    return bins

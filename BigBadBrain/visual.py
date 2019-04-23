@@ -4,6 +4,8 @@ import sys
 import h5py
 import matplotlib.pyplot as plt
 
+from BigBadBrain.utils import create_bins
+
 def get_stimuli(directory):
     """ Uses photodiode recording and outputs of visual_stimulation package to get a dictionary
     of presented stimuli and their onset times.
@@ -209,3 +211,41 @@ def parse_stim_starts_photodiode(pd, stimuli):
         print(len(stimuli))
         raise Exception('Failed to successfully parse stimuli from photodiode output')
     return stimuli_starts #in ms
+
+def create_stim_triggered_behavior_plot(fictrac,
+                                        stimulus,
+                                        folder,
+                                        behavior='dRotLabZ',
+                                        fps=50,  #in ms
+                                        dur=30*60*1000,  #in ms
+                                        pre_stim=500,  #in ms
+                                        post_stim=1000,  #in ms
+                                        sampling_res=20):  #in ms
+    
+    camera_rate = 1/fps * 1000
+    raw_fictrac_times = np.arange(0,dur,camera_rate)
+
+    sphere_radius = 4.5e-3
+    fictrac_vector = np.rad2deg(np.asarray(fictrac[behavior])) # now in deg per 20ms
+    fictrac_vector = fictrac_vector * 50 # now in deg per sec
+    fictrac_smoothed = scipy.ndimage.filters.gaussian_filter(fictrac_vector,sigma=3,truncate=1)
+    fictrac_interp = interp1d(raw_fictrac_times, fictrac_smoothed, bounds_error = False)
+
+    behavior_chunks = []
+    for time in stimulus['times']:
+        times = np.arange(time-pre_stim,time+post_stim+1,sampling_res) #+1 is so last time point is included
+        behavior_chunks.append(fictrac_interp_temp(times))
+
+    avg_trace = np.mean(np.asarray(behavior_chunks),axis=0)
+    x = np.arange(pre_stim,post_stim+1,sampling_res)
+
+    plt.figure(figsize=(10,10))
+    for behavior_chunk in behavior_chunks:
+        plt.plot(x,behavior_chunk,color=str(np.random.uniform()))
+    plt.ylabel('Z Rotation Velocity, deg/sec')
+    plt.xlabel('Time relative to stimulus, ms')
+    plt.title(folder)
+    plt.legend()
+
+    save_file = os.path.join(folder, 'behavior_STA_{}_angle_{}.png'.format(behavior, stimulus['angle']))
+    plt.savefig(save_file, bbox_inches='tight', dpi=300)
