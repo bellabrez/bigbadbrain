@@ -33,8 +33,8 @@ post_dur = 1500 #in ms
 ### Perform behavioral analysis? ###
 ####################################
 behavior = True
-use_abs_value = True # Takes the abs value of the behavior
-behaviors = ['my_speed', 'speed_all_3'] #'dRotLabX', 'dRotLabY', 'speed'
+signs =  ['plus', 'minus'] # abs, plus, minus, or None
+behaviors = ['dRotLabY', 'dRotLabZ'] #'dRotLabX', 'dRotLabY', 'speed'
 fictrac_sigmas = [3]
 beta_len = 21 #MUST BE ODD
 fps = 50 #of fictrac camera
@@ -62,21 +62,21 @@ for fly_idx, folder in enumerate(folders):
             if behavior:
                 for behavior in behaviors:
                     for sigma in fictrac_sigmas:
+                        for sign in signs:
+                            ### Prep given behavior ###
+                            fictrac_interp = bbb.interpolate_fictrac(fictrac,
+                                                                     timestamps,
+                                                                     fps,
+                                                                     dur,
+                                                                     behavior=behavior,
+                                                                     sigma=sigma,
+                                                                     sign=sign)
 
-                        ### Prep given behavior ###
-                        fictrac_interp = bbb.interpolate_fictrac(fictrac,
-                                                                 timestamps,
-                                                                 fps,
-                                                                 dur,
-                                                                 behavior=behavior,
-                                                                 sigma=sigma,
-                                                                 use_abs_value=use_abs_value)
+                            ### Fit GLM ###
+                            scores, betas = bbb.fit_glm(brain, fictrac_interp, beta_len)
 
-                        ### Fit GLM ###
-                        scores, betas = bbb.fit_glm(brain, fictrac_interp, beta_len)
-
-                        ### Save brain ###
-                        bbb.save_glm_map(scores, betas, directory, channel, param=behavior+'abs')
+                            ### Save brain ###
+                            bbb.save_glm_map(scores, betas, directory, channel, param=behavior+sign)
 
             if visual:
                 for stimulus in unique_stimuli:

@@ -65,7 +65,7 @@ def load_fictrac(directory, file='fictrac.dat'):
     return fictrac_data
 
 @timing
-def interpolate_fictrac(fictrac, timestamps, fps, dur, behavior='speed',sigma=3,use_abs_value=False):
+def interpolate_fictrac(fictrac, timestamps, fps, dur, behavior='speed',sigma=3,sign=None):
     """ Interpolate fictrac.
 
     Parameters
@@ -94,7 +94,6 @@ def interpolate_fictrac(fictrac, timestamps, fps, dur, behavior='speed',sigma=3,
       dx = scipy.ndimage.filters.gaussian_filter(dx,sigma=3)
       dy = scipy.ndimage.filters.gaussian_filter(dy,sigma=3)
       fictrac_smoothed = np.sqrt(dx*dx + dy*dy)
-
     elif behavior == 'speed_all_3':
       dx = np.asarray(fictrac['dRotLabX'])
       dy = np.asarray(fictrac['dRotLabY'])
@@ -103,12 +102,16 @@ def interpolate_fictrac(fictrac, timestamps, fps, dur, behavior='speed',sigma=3,
       dy = scipy.ndimage.filters.gaussian_filter(dy,sigma=3)
       dz = scipy.ndimage.filters.gaussian_filter(dz,sigma=3)
       fictrac_smoothed = np.sqrt(dx*dx + dy*dy + dz*dz)
-
     else:
       fictrac_smoothed = scipy.ndimage.filters.gaussian_filter(np.asarray(fictrac[behavior]),sigma=sigma)
 
-    if use_abs_value:
+    if sign is not None and sign == 'abs':
       fictrac_smoothed = np.abs(fictrac_smoothed)
+    elif sign is not None and sign == 'plus':
+      fictrac_smoothed = np.clip(fictrac_smoothed,a_min=0,a_max=None)
+    elif sign is not None and sign == 'minus':
+      fictrac_smoothed = np.clip(fictrac_smoothed,a_min=None,a_max=0)
+
     # Interpolate
     # Warning: interp1d set to fill in out of bounds times
     fictrac_interp_temp = interp1d(raw_fictrac_times, fictrac_smoothed, bounds_error = False)
