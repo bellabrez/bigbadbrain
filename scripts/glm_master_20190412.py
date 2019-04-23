@@ -79,3 +79,9 @@ for fly_idx, folder in enumerate(folders):
 
                     ### Save brain ###
                     bbb.save_glm_map(scores, betas, directory, channel, param=str(stimulus['angle']))
+
+            if behavior and visual:
+                for stimulus in unique_stimuli:
+                
+                    ### Create behavior STA plot ###
+                    bbb.create_stim_triggered_behavior_plot(fictrac, stimulus, directory)

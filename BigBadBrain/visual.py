@@ -249,5 +249,5 @@ def create_stim_triggered_behavior_plot(fictrac,
     plt.xlabel('Time relative to stimulus, ms')
     plt.title(folder)
 
-    save_file = os.path.join(folder, 'behavior_STA_{}_angle_{}.png'.format(behavior, stimulus['angle']))
+    save_file = os.path.join(folder, 'visual', 'behavior_STA_{}_angle_{}.png'.format(behavior, stimulus['angle']))
     plt.savefig(save_file, bbox_inches='tight', dpi=300)
