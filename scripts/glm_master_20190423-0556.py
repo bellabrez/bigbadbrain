@@ -33,7 +33,7 @@ post_dur = 1500 #in ms
 ### Perform behavioral analysis? ###
 ####################################
 behavior = True
-signs =  ['plus', 'minus'] # abs, plus, minus, or None
+signs =  ['df'] # abs, plus, minus, df, or None
 behaviors = ['dRotLabY', 'dRotLabZ'] #'dRotLabX', 'dRotLabY', 'speed'
 fictrac_sigmas = [3]
 beta_len = 21 #MUST BE ODD

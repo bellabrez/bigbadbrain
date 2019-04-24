@@ -111,6 +111,8 @@ def interpolate_fictrac(fictrac, timestamps, fps, dur, behavior='speed',sigma=3,
       fictrac_smoothed = np.clip(fictrac_smoothed,a_min=0,a_max=None)
     elif sign is not None and sign == 'minus':
       fictrac_smoothed = np.clip(fictrac_smoothed,a_min=None,a_max=0)
+    elif sign is not None and sign == 'df':
+      fictrac_smoothed = np.diff(fictrac_smoothed)
 
     # Interpolate
     # Warning: interp1d set to fill in out of bounds times
