@@ -65,7 +65,11 @@ def load_fictrac(directory, file='fictrac.dat'):
     return fictrac_data
 
 @timing
+<<<<<<< HEAD
 def interpolate_fictrac(fictrac, timestamps, fps, dur, behavior='speed',sigma=3,sign=None):
+=======
+def interpolate_fictrac(fictrac, timestamps, fps, dur, behavior='speed',sigma=3):
+>>>>>>> 9213cd1a332ddc689afe14450fe59aec2536445b
     """ Interpolate fictrac.
 
     Parameters
@@ -87,6 +91,7 @@ def interpolate_fictrac(fictrac, timestamps, fps, dur, behavior='speed',sigma=3,
     
     # Cut off any extra frames (only happened with brain 4)
     fictrac = fictrac[:90000]
+<<<<<<< HEAD
  
     if behavior == 'my_speed':
       dx = np.asarray(fictrac['dRotLabX'])
@@ -116,6 +121,12 @@ def interpolate_fictrac(fictrac, timestamps, fps, dur, behavior='speed',sigma=3,
     elif sing is not None and sign == 'df_abs':
       fictrac_smoothed = np.abs(np.append(np.diff(fictrac_smoothed),0))
 
+=======
+    
+    # Smooth
+    fictrac_smoothed = scipy.ndimage.filters.gaussian_filter(np.asarray(fictrac[behavior]),sigma=sigma)
+    
+>>>>>>> 9213cd1a332ddc689afe14450fe59aec2536445b
     # Interpolate
     # Warning: interp1d set to fill in out of bounds times
     fictrac_interp_temp = interp1d(raw_fictrac_times, fictrac_smoothed, bounds_error = False)

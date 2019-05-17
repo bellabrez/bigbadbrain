@@ -199,6 +199,7 @@ def announce_start(directory, fly_idx, folders):
     ### Send email and define folder path ###
     print('\n~~~~ Starting analysis of {} ~~~~'.format(directory))
     sys.stdout.flush()
+<<<<<<< HEAD
     send_email('Starting {} ({} of {}).'.format(directory, fly_idx+1, len(folders)), 'wow')
 
 
@@ -220,3 +221,6 @@ def create_bins(bin_size, pre_dur, post_dur):
     bins_post = np.arange(0,post_dur+1,bin_size)
     bins = np.unique(np.concatenate((bins_pre, bins_post)))
     return bins
+=======
+    send_email('Starting {} ({} of {}).'.format(directory, fly_idx+1, len(folders)), 'wow')
+>>>>>>> 9213cd1a332ddc689afe14450fe59aec2536445b

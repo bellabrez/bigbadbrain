@@ -1,7 +1,10 @@
 import numpy as np
 import os
 import sys
+<<<<<<< HEAD
 import psutil
+=======
+>>>>>>> 9213cd1a332ddc689afe14450fe59aec2536445b
 from time import time
 import matplotlib.pyplot as plt
 
@@ -29,6 +32,7 @@ def align_volume(fixed, moving, vol):
     motCorr_vol = ants.registration(fixed, moving_vol, type_of_transform='SyN')
     return motCorr_vol
 
+<<<<<<< HEAD
 def split_if_too_big(f):
     def wrapper(*args, **kwargs):
         # If x/y is too big, need to do 1st and 2nd half separately
@@ -66,6 +70,12 @@ def motion_correction(brain_master,
                       start_volume=None,
                       end_volume=None,
                       suffix=''):
+=======
+
+
+@timing
+def motion_correction(brain_master, brain_slave, directory, motcorr_directory):
+>>>>>>> 9213cd1a332ddc689afe14450fe59aec2536445b
     """ Performs non-linear warping of each red brain volume to the red temporal meanbrain,
     and duplicates this to the green channel.
 
@@ -90,6 +100,7 @@ def motion_correction(brain_master,
     transforms = []
     print('Performing motion correction...')
     sys.stdout.flush()
+<<<<<<< HEAD
 
     if start_volume is None:
         start_volume = 0
@@ -101,6 +112,10 @@ def motion_correction(brain_master,
         print('Aligning brain volume {} of {}...'.format(i+1, dims['t']), end='')
         memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
         print('Current memory usage: {:.2f}GB'.format(memory_usage))
+=======
+    for i in range(dims['t']):
+        print('Aligning brain volume {} of {}...'.format(i+1, dims['t']), end='')
+>>>>>>> 9213cd1a332ddc689afe14450fe59aec2536445b
         sys.stdout.flush()
         t0 = time()
         
@@ -119,8 +134,13 @@ def motion_correction(brain_master,
         sys.stdout.flush()
 
     # Save motcorr brains
+<<<<<<< HEAD
     save_motCorr_brain(motCorr_brain_master, motcorr_directory, suffix='red'+suffix)
     save_motCorr_brain(motCorr_brain_slave, motcorr_directory, suffix='green'+suffix)
+=======
+    save_motCorr_brain(motCorr_brain_master, motcorr_directory, suffix='red')
+    save_motCorr_brain(motCorr_brain_slave, motcorr_directory, suffix='green')
+>>>>>>> 9213cd1a332ddc689afe14450fe59aec2536445b
 
     transform_matrix = save_transform_files(transforms, motcorr_directory)
     save_motion_figure(transform_matrix, directory, motcorr_directory)

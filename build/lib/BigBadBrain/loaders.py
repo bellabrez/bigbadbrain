@@ -3,7 +3,11 @@ import sys
 import numpy as np
 
 from .utils import timing
+<<<<<<< HEAD
 from .brain import load_numpy_brain, bleaching_correction, z_score_brain, save_brain, get_dims
+=======
+from .brain import load_numpy_brain, bleaching_correction, z_score_brain, save_brain
+>>>>>>> 9213cd1a332ddc689afe14450fe59aec2536445b
 from .motcorr import motion_correction
 
 @timing
@@ -56,7 +60,10 @@ def get_motcorr_brain(directory, channel):
                                       brain_slave=brain[:,:,:,:,1],
                                       directory=directory,
                                       motcorr_directory=motcorr_directory)
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9213cd1a332ddc689afe14450fe59aec2536445b
         except:
             print('Failed to load 2 channel functional brain.')
             print('Trying to load channels separately.')

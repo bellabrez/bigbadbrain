@@ -2,12 +2,17 @@ import numpy as np
 import os
 import sys
 import h5py
+<<<<<<< HEAD
 import scipy
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 
 from BigBadBrain.utils import create_bins
 
+=======
+import matplotlib.pyplot as plt
+
+>>>>>>> 9213cd1a332ddc689afe14450fe59aec2536445b
 def get_stimuli(directory):
     """ Uses photodiode recording and outputs of visual_stimulation package to get a dictionary
     of presented stimuli and their onset times.
@@ -212,6 +217,7 @@ def parse_stim_starts_photodiode(pd, stimuli):
         print(len(stimuli_starts))
         print(len(stimuli))
         raise Exception('Failed to successfully parse stimuli from photodiode output')
+<<<<<<< HEAD
     return stimuli_starts #in ms
 
 def create_stim_triggered_behavior_plot(fictrac,
@@ -251,3 +257,6 @@ def create_stim_triggered_behavior_plot(fictrac,
 
     save_file = os.path.join(folder, 'visual', 'behavior_STA_{}_angle_{}.png'.format(behavior, stimulus['angle']))
     plt.savefig(save_file, bbox_inches='tight', dpi=300)
+=======
+    return stimuli_starts #in ms
+>>>>>>> 9213cd1a332ddc689afe14450fe59aec2536445b

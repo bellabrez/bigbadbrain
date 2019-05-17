@@ -59,9 +59,12 @@ def save_brain(file, brain):
     Nothing. """
 
     ants.image_write(ants.from_numpy(brain), file)
+<<<<<<< HEAD
     memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
     print('Current memory usage: {:.2f}GB'.format(memory_usage))
     sys.stdout.flush()
+=======
+>>>>>>> 9213cd1a332ddc689afe14450fe59aec2536445b
 
 def view_brain(brain, slice_idx=None):
     """ Uses matplotlib imshow to view a brain slice.
@@ -80,7 +83,11 @@ def view_brain(brain, slice_idx=None):
         slice_idx = int(brain.shape[-1]/2)
 
     plt.figure(figsize=(10,10))
+<<<<<<< HEAD
     plt.imshow(np.swapaxes(brain,0,1)[:,:,slice_idx])
+=======
+    plt.imshow(np.swapaxes(brain,(0,1))[:,:,slice_idx])
+>>>>>>> 9213cd1a332ddc689afe14450fe59aec2536445b
     plt.show()
 
 @timing
