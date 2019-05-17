@@ -58,7 +58,6 @@ def split_if_too_big(f):
     return wrapper
 
 @timing
-@split_if_too_big
 def motion_correction(brain_master,
                       brain_slave,
                       directory,
