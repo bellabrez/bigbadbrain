@@ -63,6 +63,7 @@ def motion_correction(brain_master,
                       brain_slave,
                       directory,
                       motcorr_directory,
+                      meanbrain=None,
                       start_volume=None,
                       end_volume=None,
                       suffix=''):
@@ -80,8 +81,10 @@ def motion_correction(brain_master,
     -------
     Nothing. """
     
-    # Make mean brain
-    meanbrain = ants.from_numpy(make_meanbrain(brain_master))
+    # Make mean brain if not supplied
+    if meanbrain is None:
+        meanbrain = ants.from_numpy(make_meanbrain(brain_master))
+
     dims = get_dims(brain_master)
 
     # Align each time volume to the meanbrain
