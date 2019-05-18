@@ -29,8 +29,12 @@ def align_volume(fixed, moving, vol):
 
     """
     moving_vol = ants.from_numpy(moving[:,:,:,vol])
+    print('Before alignment')
+    sys.stdout.flush()
     with suppress_stdout():
         motCorr_vol = ants.registration(fixed, moving_vol, type_of_transform='SyN')
+    print('After alignment')
+    sys.stdout.flush()
     return motCorr_vol
 
 def split_if_too_big(f):
@@ -119,8 +123,12 @@ def motion_correction(brain_master,
         fixed = meanbrain
         moving = ants.from_numpy(brain_slave[:,:,:,i])
         transformlist = motCorr_vol_master['fwdtransforms']
+        print('Before applying')
+        sys.stdout.flush()
         with suppress_stdout():
             motCorr_brain_slave.append(ants.apply_transforms(fixed,moving,transformlist).numpy())
+        print('After applying')
+        sys.stdout.flush()
         
         print('Done. Duration: {:.1f}s'.format(time()-t0))
         sys.stdout.flush()
