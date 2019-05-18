@@ -110,7 +110,8 @@ def motion_correction(brain_master,
         t0 = time()
         
         #First, align given master volume to master meanbrain
-        motCorr_vol_master = align_volume(fixed=meanbrain, moving=brain_master, vol=i)
+        with HiddenPrints():
+            motCorr_vol_master = align_volume(fixed=meanbrain, moving=brain_master, vol=i)
         motCorr_brain_master.append(motCorr_vol_master['warpedmovout'].numpy())
         transforms.append(motCorr_vol_master['fwdtransforms'])
         
@@ -118,7 +119,8 @@ def motion_correction(brain_master,
         fixed = meanbrain
         moving = ants.from_numpy(brain_slave[:,:,:,i])
         transformlist = motCorr_vol_master['fwdtransforms']
-        motCorr_brain_slave.append(ants.apply_transforms(fixed,moving,transformlist).numpy())
+        with HiddenPrints():
+            motCorr_brain_slave.append(ants.apply_transforms(fixed,moving,transformlist).numpy())
         
         print('Done. Duration: {:.1f}s'.format(time()-t0))
         sys.stdout.flush()
