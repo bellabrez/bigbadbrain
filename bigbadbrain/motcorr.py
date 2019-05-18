@@ -32,13 +32,15 @@ def align_volume(fixed, moving, vol):
     """
     moving_vol = ants.from_numpy(moving[:,:,:,vol])
     ### Shitty output is coming from here:
-    sys.stdout = open(os.devnull, "w")
-    sys.stderr = open(os.devnull, "w")
-    motCorr_vol = ants.registration(fixed, moving_vol, type_of_transform='SyN')
-    sys.stdout = sys.__stdout__
-    sys.stderr = sys.__stderr__
+    #sys.stdout = open(os.devnull, "w")
+    #sys.stderr = open(os.devnull, "w")
+    with stdout_redirected():
+        motCorr_vol = ants.registration(fixed, moving_vol, type_of_transform='SyN')
+        print('TRASH GONENDFKJDBFJHBDJKHFGDHJG')
+    #sys.stdout = sys.__stdout__
+    #sys.stderr = sys.__stderr__
     print('is fixed?')
-    os.stdout.flush()
+    sys.stdout.flush()
     return motCorr_vol
 
 def split_if_too_big(f):
@@ -193,6 +195,35 @@ def save_motCorr_brain(brain, directory, suffix):
     save_file = os.path.join(directory, 'motcorr_' + suffix + '.nii')
     ants.image_write(motCorr_brain_ants, save_file)
     return motCorr_brain_ants
+
+@contextmanager
+def stdout_redirected(to=os.devnull):
+    '''
+    import os
+
+    with stdout_redirected(to=filename):
+        print("from Python")
+        os.system("echo non-Python applications are also supported")
+    '''
+    fd = sys.stdout.fileno()
+
+    ##### assert that Python and C stdio write using the same file descriptor
+    ####assert libc.fileno(ctypes.c_void_p.in_dll(libc, "stdout")) == fd == 1
+
+    def _redirect_stdout(to):
+        sys.stdout.close() # + implicit flush()
+        os.dup2(to.fileno(), fd) # fd writes to 'to' file
+        sys.stdout = os.fdopen(fd, 'w') # Python writes to fd
+
+    with os.fdopen(os.dup(fd), 'w') as old_stdout:
+        with open(to, 'w') as file:
+            _redirect_stdout(to=file)
+        try:
+            yield # allow code to be run with the redirected stdout
+        finally:
+            _redirect_stdout(to=old_stdout) # restore stdout.
+                                            # buffering and flags such as
+                                            # CLOEXEC may be different
 
 @contextmanager
 def suppress_stdout():
