@@ -1,11 +1,12 @@
 import numpy as np
 import os
 import sys
+<<<<<<< HEAD
 import psutil
+=======
+>>>>>>> 9213cd1a332ddc689afe14450fe59aec2536445b
 from time import time
 import matplotlib.pyplot as plt
-import warnings
-warnings.filterwarnings("ignore")
 
 from BigBadBrain.brain import get_resolution, get_dims, load_numpy_brain, make_meanbrain
 from BigBadBrain.utils import timing
@@ -28,16 +29,16 @@ def align_volume(fixed, moving, vol):
 
     """
     moving_vol = ants.from_numpy(moving[:,:,:,vol])
-    with HiddenPrints():
-        motCorr_vol = ants.registration(fixed, moving_vol, type_of_transform='SyN')
+    motCorr_vol = ants.registration(fixed, moving_vol, type_of_transform='SyN')
     return motCorr_vol
 
+<<<<<<< HEAD
 def split_if_too_big(f):
     def wrapper(*args, **kwargs):
         # If x/y is too big, need to do 1st and 2nd half separately
         dims = get_dims(kwargs['brain_master'])
         if dims['x'] > 200:
-            print('Brain too big to motcorr at once - will do it in two parts.')
+            print('Brain too big to motcorr at once - will do in two parts.')
             sys.stdout.flush()
 
             middle_volume = int(dims['t']/2)
@@ -61,14 +62,20 @@ def split_if_too_big(f):
     return wrapper
 
 @timing
+@split_if_too_big
 def motion_correction(brain_master,
                       brain_slave,
                       directory,
                       motcorr_directory,
-                      meanbrain=None,
                       start_volume=None,
                       end_volume=None,
                       suffix=''):
+=======
+
+
+@timing
+def motion_correction(brain_master, brain_slave, directory, motcorr_directory):
+>>>>>>> 9213cd1a332ddc689afe14450fe59aec2536445b
     """ Performs non-linear warping of each red brain volume to the red temporal meanbrain,
     and duplicates this to the green channel.
 
@@ -83,10 +90,8 @@ def motion_correction(brain_master,
     -------
     Nothing. """
     
-    # Make mean brain if not supplied
-    if meanbrain is None:
-        meanbrain = ants.from_numpy(make_meanbrain(brain_master))
-
+    # Make mean brain
+    meanbrain = ants.from_numpy(make_meanbrain(brain_master))
     dims = get_dims(brain_master)
 
     # Align each time volume to the meanbrain
@@ -95,6 +100,7 @@ def motion_correction(brain_master,
     transforms = []
     print('Performing motion correction...')
     sys.stdout.flush()
+<<<<<<< HEAD
 
     if start_volume is None:
         start_volume = 0
@@ -102,10 +108,14 @@ def motion_correction(brain_master,
     if end_volume is None:
         end_volume = dims['t']
 
-    for i in range(int(start_volume), int(end_volume)):
+    for i in range(start_volume, end_volume):
         print('Aligning brain volume {} of {}...'.format(i+1, dims['t']), end='')
         memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
         print('Current memory usage: {:.2f}GB'.format(memory_usage))
+=======
+    for i in range(dims['t']):
+        print('Aligning brain volume {} of {}...'.format(i+1, dims['t']), end='')
+>>>>>>> 9213cd1a332ddc689afe14450fe59aec2536445b
         sys.stdout.flush()
         t0 = time()
         
@@ -124,8 +134,13 @@ def motion_correction(brain_master,
         sys.stdout.flush()
 
     # Save motcorr brains
+<<<<<<< HEAD
     save_motCorr_brain(motCorr_brain_master, motcorr_directory, suffix='red'+suffix)
     save_motCorr_brain(motCorr_brain_slave, motcorr_directory, suffix='green'+suffix)
+=======
+    save_motCorr_brain(motCorr_brain_master, motcorr_directory, suffix='red')
+    save_motCorr_brain(motCorr_brain_slave, motcorr_directory, suffix='green')
+>>>>>>> 9213cd1a332ddc689afe14450fe59aec2536445b
 
     transform_matrix = save_transform_files(transforms, motcorr_directory)
     save_motion_figure(transform_matrix, directory, motcorr_directory)
@@ -184,12 +199,3 @@ def save_motCorr_brain(brain, directory, suffix):
     save_file = os.path.join(directory, 'motcorr_' + suffix + '.nii')
     ants.image_write(motCorr_brain_ants, save_file)
     return motCorr_brain_ants
-
-class HiddenPrints:
-    def __enter__(self):
-        self._original_stdout = sys.stdout
-        sys.stdout = open(os.devnull, 'w')
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        sys.stdout.close()
-        sys.stdout = self._original_stdout
