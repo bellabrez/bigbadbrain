@@ -30,7 +30,7 @@ def align_volume(fixed, moving, vol):
     """
     moving_vol = ants.from_numpy(moving[:,:,:,vol])
     ### Shitty output is coming from here:
-    with suppress_stdout():
+    with HiddenPrints():
         motCorr_vol = ants.registration(fixed, moving_vol, type_of_transform='SyN')
     return motCorr_vol
 
