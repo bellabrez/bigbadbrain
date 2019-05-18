@@ -28,7 +28,8 @@ def align_volume(fixed, moving, vol):
 
     """
     moving_vol = ants.from_numpy(moving[:,:,:,vol])
-    motCorr_vol = ants.registration(fixed, moving_vol, type_of_transform='SyN')
+    with HiddenPrints():
+        motCorr_vol = ants.registration(fixed, moving_vol, type_of_transform='SyN')
     return motCorr_vol
 
 def split_if_too_big(f):
@@ -183,3 +184,12 @@ def save_motCorr_brain(brain, directory, suffix):
     save_file = os.path.join(directory, 'motcorr_' + suffix + '.nii')
     ants.image_write(motCorr_brain_ants, save_file)
     return motCorr_brain_ants
+
+class HiddenPrints:
+    def __enter__(self):
+        self._original_stdout = sys.stdout
+        sys.stdout = open(os.devnull, 'w')
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        sys.stdout.close()
+        sys.stdout = self._original_stdout
