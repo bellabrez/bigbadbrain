@@ -34,7 +34,7 @@ def split_if_too_big(f):
         # If x/y is too big, need to do 1st and 2nd half separately
         dims = get_dims(kwargs['brain_master'])
         if dims['x'] > 200:
-            print('Brain too big to motcorr at once - will do in two parts.')
+            print('Brain too big to motcorr at once - will do it in two parts.')
             sys.stdout.flush()
 
             middle_volume = int(dims['t']/2)
