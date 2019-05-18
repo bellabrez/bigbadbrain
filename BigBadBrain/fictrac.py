@@ -5,7 +5,7 @@ import scipy
 import pandas as pd
 from scipy.interpolate import interp1d
 
-from BigBadBrain.utils import timing
+from bigbadbrain.utils import timing
 
 @timing
 def load_fictrac(directory, file='fictrac.dat'):

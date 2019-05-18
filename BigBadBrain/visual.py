@@ -6,7 +6,7 @@ import scipy
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 
-from BigBadBrain.utils import create_bins
+from bigbadbrain.utils import create_bins
 
 def get_stimuli(directory):
     """ Uses photodiode recording and outputs of visual_stimulation package to get a dictionary

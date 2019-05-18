@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 import warnings
 warnings.filterwarnings("ignore")
 
-from BigBadBrain.brain import get_resolution, get_dims, load_numpy_brain, make_meanbrain
-from BigBadBrain.utils import timing
+from bigbadbrain.brain import get_resolution, get_dims, load_numpy_brain, make_meanbrain
+from bigbadbrain.utils import timing
 
 sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
 import ants

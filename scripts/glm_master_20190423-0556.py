@@ -5,7 +5,7 @@ import sys
 import scipy
 sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
 import ants
-import BigBadBrain as bbb
+import bigbadbrain as bbb
 
 ##########################
 ### What flies to run? ###

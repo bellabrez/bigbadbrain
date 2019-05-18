@@ -4,8 +4,8 @@ import numpy as np
 from scipy.linalg import toeplitz
 from sklearn.linear_model import LassoLarsIC
 
-from BigBadBrain.utils import timing, create_bins
-from BigBadBrain.brain import get_dims
+from bigbadbrain.utils import timing, create_bins
+from bigbadbrain.brain import get_dims
 
 sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
 import ants
