@@ -32,8 +32,13 @@ def align_volume(fixed, moving, vol):
     """
     moving_vol = ants.from_numpy(moving[:,:,:,vol])
     ### Shitty output is coming from here:
-    with HiddenPrints():
-        motCorr_vol = ants.registration(fixed, moving_vol, type_of_transform='SyN')
+    sys.stdout = open(os.devnull, "w")
+    sys.stderr = open(os.devnull, "w")
+    motCorr_vol = ants.registration(fixed, moving_vol, type_of_transform='SyN')
+    sys.stdout = sys.__stdout__
+    sys.stderr = sys.__stderr__
+    print('is fixed?')
+    os.stdout.flush()
     return motCorr_vol
 
 def split_if_too_big(f):
