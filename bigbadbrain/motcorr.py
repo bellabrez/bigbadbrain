@@ -4,6 +4,7 @@ import sys
 import psutil
 from time import time
 import matplotlib.pyplot as plt
+from contextlib import contextmanager
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -28,7 +29,7 @@ def align_volume(fixed, moving, vol):
 
     """
     moving_vol = ants.from_numpy(moving[:,:,:,vol])
-    with HiddenPrints():
+    with suppress_stdout():
         motCorr_vol = ants.registration(fixed, moving_vol, type_of_transform='SyN')
     return motCorr_vol
 
@@ -110,8 +111,7 @@ def motion_correction(brain_master,
         t0 = time()
         
         #First, align given master volume to master meanbrain
-        with HiddenPrints():
-            motCorr_vol_master = align_volume(fixed=meanbrain, moving=brain_master, vol=i)
+        motCorr_vol_master = align_volume(fixed=meanbrain, moving=brain_master, vol=i)
         motCorr_brain_master.append(motCorr_vol_master['warpedmovout'].numpy())
         transforms.append(motCorr_vol_master['fwdtransforms'])
         
@@ -119,7 +119,7 @@ def motion_correction(brain_master,
         fixed = meanbrain
         moving = ants.from_numpy(brain_slave[:,:,:,i])
         transformlist = motCorr_vol_master['fwdtransforms']
-        with HiddenPrints():
+        with suppress_stdout():
             motCorr_brain_slave.append(ants.apply_transforms(fixed,moving,transformlist).numpy())
         
         print('Done. Duration: {:.1f}s'.format(time()-t0))
@@ -186,6 +186,16 @@ def save_motCorr_brain(brain, directory, suffix):
     save_file = os.path.join(directory, 'motcorr_' + suffix + '.nii')
     ants.image_write(motCorr_brain_ants, save_file)
     return motCorr_brain_ants
+
+@contextmanager
+def suppress_stdout():
+    with open(os.devnull, "w") as devnull:
+        old_stdout = sys.stdout
+        sys.stdout = devnull
+        try:  
+            yield
+        finally:
+            sys.stdout = old_stdout
 
 class HiddenPrints:
     def __enter__(self):
