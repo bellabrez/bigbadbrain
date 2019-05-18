@@ -107,9 +107,9 @@ def motion_correction(brain_master,
         end_volume = dims['t']
 
     for i in range(int(start_volume), int(end_volume)):
-        print('Aligning brain volume {} of {}...'.format(i+1, dims['t']), end='')
+        print('Aligning fun brain volume {} of {}...'.format(i+1, dims['t']), end='')
         memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
-        print('Current memory usage: {:.2f}GB'.format(memory_usage))
+        #print('Current memory usage: {:.2f}GB'.format(memory_usage))
         sys.stdout.flush()
         t0 = time()
         
