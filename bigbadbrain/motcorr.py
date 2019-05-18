@@ -14,6 +14,8 @@ from bigbadbrain.utils import timing
 sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
 import ants
 
+SetMaximumKernelWidth = 6
+
 def align_volume(fixed, moving, vol):
     """ Aligns a single 3D volume to another using antspy.
 
