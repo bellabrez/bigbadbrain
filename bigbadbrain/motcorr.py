@@ -14,8 +14,6 @@ from bigbadbrain.utils import timing
 sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
 import ants
 
-SetMaximumKernelWidth = 6
-
 def align_volume(fixed, moving, vol):
     """ Aligns a single 3D volume to another using antspy.
 
@@ -31,16 +29,10 @@ def align_volume(fixed, moving, vol):
 
     """
     moving_vol = ants.from_numpy(moving[:,:,:,vol])
-    ### Shitty output is coming from here:
-    #sys.stdout = open(os.devnull, "w")
-    #sys.stderr = open(os.devnull, "w")
-    with stderr_redirected():
+
+    with stderr_redirected(): # to prevent dumb itk gaussian error bullshit infinite printing
         motCorr_vol = ants.registration(fixed, moving_vol, type_of_transform='SyN')
-        print('TRASH GONENDFKJDBFJHBDJKHFGDHJG')
-    #sys.stdout = sys.__stdout__
-    #sys.stderr = sys.__stderr__
-    print('is fixed?')
-    sys.stdout.flush()
+
     return motCorr_vol
 
 def split_if_too_big(f):
@@ -104,7 +96,8 @@ def motion_correction(brain_master,
     motCorr_brain_master = []
     motCorr_brain_slave = []
     transforms = []
-    print('Performing motion correction...')
+    durations = []
+    print('starting motcorr...')
     sys.stdout.flush()
 
     if start_volume is None:
@@ -114,9 +107,11 @@ def motion_correction(brain_master,
         end_volume = dims['t']
 
     for i in range(int(start_volume), int(end_volume)):
-        print('Aligning really fun brain volume {} of {}...'.format(i+1, dims['t']), end='')
-        memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
-        print('Current memory usage: {:.2f}GB'.format(memory_usage))
+        sys.stdout.write('\r')
+        sys.stdout.flush()
+        print('Aligning brain volume {} of {}.'.format(i+1, dims['t']),end='')
+        #memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
+        #print('Current memory usage: {:.2f}GB'.format(memory_usage))
         sys.stdout.flush()
         t0 = time()
         
@@ -131,7 +126,9 @@ def motion_correction(brain_master,
         transformlist = motCorr_vol_master['fwdtransforms']
         motCorr_brain_slave.append(ants.apply_transforms(fixed,moving,transformlist).numpy())
         
-        print('Done. Duration: {:.1f}s'.format(time()-t0))
+        durations.append(time()-t0)
+
+        print('Average Duration {:.1f}s'.format(np.mean(durations)))
         sys.stdout.flush()
 
     # Save motcorr brains
@@ -197,36 +194,6 @@ def save_motCorr_brain(brain, directory, suffix):
     return motCorr_brain_ants
 
 @contextmanager
-def stdout_redirected(to=os.devnull):
-    '''
-    import os
-
-    with stdout_redirected(to=filename):
-        print("from Python")
-        os.system("echo non-Python applications are also supported")
-    '''
-    fd = sys.stdout.fileno()
-
-    ##### assert that Python and C stdio write using the same file descriptor
-    ####assert libc.fileno(ctypes.c_void_p.in_dll(libc, "stdout")) == fd == 1
-
-    def _redirect_stdout(to):
-        sys.stdout.close() # + implicit flush()
-        os.dup2(to.fileno(), fd) # fd writes to 'to' file
-        sys.stdout = os.fdopen(fd, 'w') # Python writes to fd
-
-    with os.fdopen(os.dup(fd), 'w') as old_stdout:
-        with open(to, 'w') as file:
-            _redirect_stdout(to=file)
-        try:
-            yield # allow code to be run with the redirected stdout
-        finally:
-            _redirect_stdout(to=old_stdout) # restore stdout.
-                                            # buffering and flags such as
-                                            # CLOEXEC may be different
-
-
-@contextmanager
 def stderr_redirected(to=os.devnull):
     '''
     import os
@@ -254,28 +221,3 @@ def stderr_redirected(to=os.devnull):
             _redirect_stderr(to=old_stderr) # restore stdout.
                                             # buffering and flags such as
                                             # CLOEXEC may be different
-
-@contextmanager
-def suppress_stdout():
-    with open(os.devnull, "w") as devnull:
-        old_stdout = sys.stdout
-        sys.stdout = devnull
-        try:  
-            yield
-        finally:
-            sys.stdout = old_stdout
-
-class HiddenPrints:
-    def __enter__(self):
-        self._original_stdout = sys.stdout
-        sys.stdout = open(os.devnull, 'w')
-
-        self._original_stderr = sys.stderr
-        sys.stderr = open(os.devnull, 'w')
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        sys.stdout.close()
-        sys.stdout = self._original_stdout
-
-        sys.stderr.close()
-        sys.stderr = self._original_stderr
