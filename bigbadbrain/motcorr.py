@@ -29,11 +29,9 @@ def align_volume(fixed, moving, vol):
 
     """
     moving_vol = ants.from_numpy(moving[:,:,:,vol])
-    print('Before alignment')
-    sys.stdout.flush()
-    motCorr_vol = ants.registration(fixed, moving_vol, type_of_transform='SyN')
-    print('After alignment')
-    sys.stdout.flush()
+    ### Shitty output is coming from here:
+    with suppress_stdout():
+        motCorr_vol = ants.registration(fixed, moving_vol, type_of_transform='SyN')
     return motCorr_vol
 
 def split_if_too_big(f):
@@ -107,9 +105,9 @@ def motion_correction(brain_master,
         end_volume = dims['t']
 
     for i in range(int(start_volume), int(end_volume)):
-        print('Aligning fun brain volume {} of {}...'.format(i+1, dims['t']), end='')
+        print('Aligning really fun brain volume {} of {}...'.format(i+1, dims['t']), end='')
         memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
-        #print('Current memory usage: {:.2f}GB'.format(memory_usage))
+        print('Current memory usage: {:.2f}GB'.format(memory_usage))
         sys.stdout.flush()
         t0 = time()
         
@@ -122,11 +120,7 @@ def motion_correction(brain_master,
         fixed = meanbrain
         moving = ants.from_numpy(brain_slave[:,:,:,i])
         transformlist = motCorr_vol_master['fwdtransforms']
-        print('Before applying')
-        sys.stdout.flush()
         motCorr_brain_slave.append(ants.apply_transforms(fixed,moving,transformlist).numpy())
-        print('After applying')
-        sys.stdout.flush()
         
         print('Done. Duration: {:.1f}s'.format(time()-t0))
         sys.stdout.flush()
