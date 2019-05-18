@@ -4,6 +4,8 @@ import sys
 import psutil
 from time import time
 import matplotlib.pyplot as plt
+import warnings
+warnings.filterwarnings("ignore")
 
 from BigBadBrain.brain import get_resolution, get_dims, load_numpy_brain, make_meanbrain
 from BigBadBrain.utils import timing
