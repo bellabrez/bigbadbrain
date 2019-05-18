@@ -34,7 +34,7 @@ def align_volume(fixed, moving, vol):
     ### Shitty output is coming from here:
     #sys.stdout = open(os.devnull, "w")
     #sys.stderr = open(os.devnull, "w")
-    with stdout_redirected():
+    with stderr_redirected():
         motCorr_vol = ants.registration(fixed, moving_vol, type_of_transform='SyN')
         print('TRASH GONENDFKJDBFJHBDJKHFGDHJG')
     #sys.stdout = sys.__stdout__
@@ -222,6 +222,36 @@ def stdout_redirected(to=os.devnull):
             yield # allow code to be run with the redirected stdout
         finally:
             _redirect_stdout(to=old_stdout) # restore stdout.
+                                            # buffering and flags such as
+                                            # CLOEXEC may be different
+
+
+@contextmanager
+def stderr_redirected(to=os.devnull):
+    '''
+    import os
+
+    with stdout_redirected(to=filename):
+        print("from Python")
+        os.system("echo non-Python applications are also supported")
+    '''
+    fd = sys.stderr.fileno()
+
+    ##### assert that Python and C stdio write using the same file descriptor
+    ####assert libc.fileno(ctypes.c_void_p.in_dll(libc, "stdout")) == fd == 1
+
+    def _redirect_stderr(to):
+        sys.stderr.close() # + implicit flush()
+        os.dup2(to.fileno(), fd) # fd writes to 'to' file
+        sys.stderr = os.fdopen(fd, 'w') # Python writes to fd
+
+    with os.fdopen(os.dup(fd), 'w') as old_stderr:
+        with open(to, 'w') as file:
+            _redirect_stderr(to=file)
+        try:
+            yield # allow code to be run with the redirected stdout
+        finally:
+            _redirect_stderr(to=old_stderr) # restore stdout.
                                             # buffering and flags such as
                                             # CLOEXEC may be different
 
