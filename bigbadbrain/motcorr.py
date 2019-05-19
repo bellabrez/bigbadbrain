@@ -97,7 +97,6 @@ def motion_correction(brain_master,
     motCorr_brain_slave = []
     transforms = []
     durations = []
-    print('starting motcorr...')
     sys.stdout.flush()
 
     if start_volume is None:
@@ -109,7 +108,7 @@ def motion_correction(brain_master,
     for i in range(int(start_volume), int(end_volume)):
         #sys.stdout.write('\r')
         #sys.stdout.flush()
-        print('\rAligning brain volume {} of {}.'.format(i+1, dims['t']))
+        print('Aligning brain volume {} of {}.'.format(i+1, dims['t']), end=' ')
         #memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
         #print('Current memory usage: {:.2f}GB'.format(memory_usage))
         sys.stdout.flush()
@@ -128,7 +127,7 @@ def motion_correction(brain_master,
         
         durations.append(time()-t0)
 
-        #print('Average Duration {:.1f}s'.format(np.mean(durations)))
+        print('Average Duration {:.1f}s'.format(np.mean(durations)))
         sys.stdout.flush()
 
     # Save motcorr brains
