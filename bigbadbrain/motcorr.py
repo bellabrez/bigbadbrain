@@ -105,7 +105,7 @@ def motion_correction(brain_master,
     if end_volume is None:
         end_volume = dims['t']
 
-    for i in range(int(start_volume), int(end_volume)):
+    for i in range(start_volume, end_volume):
         #sys.stdout.write('\r')
         #sys.stdout.flush()
         print('Aligning brain volume {} of {}.'.format(i+1, dims['t']), end=' ')
