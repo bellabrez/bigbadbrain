@@ -134,11 +134,11 @@ def motion_correction(brain_master,
     save_motCorr_brain(motCorr_brain_master, motcorr_directory, suffix='red'+suffix)
     save_motCorr_brain(motCorr_brain_slave, motcorr_directory, suffix='green'+suffix)
 
-    transform_matrix = save_transform_files(transforms, motcorr_directory)
-    save_motion_figure(transform_matrix, directory, motcorr_directory)
+    save_transform_files(transforms, motcorr_directory, suffix=suffix)
+    #save_motion_figure(transform_matrix, directory, motcorr_directory)
 
 @timing
-def save_transform_files(transforms, motcorr_directory):
+def save_transform_files(transforms, motcorr_directory, suffix):
 # Organize mat transform file
     transform_matrix = []
     for i, transform in enumerate(transforms):
@@ -149,9 +149,8 @@ def save_transform_files(transforms, motcorr_directory):
     transform_matrix = np.array(transform_matrix)
 
     # Save mat transform file
-    save_file = os.path.join(motcorr_directory, 'motcorr_params')
+    save_file = os.path.join(motcorr_directory, 'motcorr_params{}'.format(suffix))
     np.save(save_file,transform_matrix)
-    return transform_matrix
 
 @timing
 def save_motion_figure(transform_matrix, directory, motcorr_directory):
