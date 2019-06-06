@@ -7,8 +7,10 @@ from sklearn.linear_model import LassoLarsIC
 from bigbadbrain.utils import timing, create_bins
 from bigbadbrain.brain import get_dims
 
-sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
-import ants
+import platform
+if platform.system() != 'Windows':
+    sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
+    import ants
 
 @timing
 def fit_visual_glm(brain, stimulus, timestamps, bin_size, pre_dur, post_dur):

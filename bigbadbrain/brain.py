@@ -8,8 +8,10 @@ from xml.etree import ElementTree as ET
 import matplotlib.pyplot as plt
 from bigbadbrain.utils import timing
 
-sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
-import ants
+import platform
+if platform.system() != 'Windows':
+    sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
+    import ants
 
 @timing
 def load_numpy_brain(file, channel=None, flip_z=False):

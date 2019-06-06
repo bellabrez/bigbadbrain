@@ -11,8 +11,10 @@ warnings.filterwarnings("ignore")
 from bigbadbrain.brain import get_resolution, get_dims, load_numpy_brain, make_meanbrain
 from bigbadbrain.utils import timing
 
-sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
-import ants
+import platform
+if platform.system() != 'Windows':
+    sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
+    import ants
 
 def align_volume(fixed, moving, vol):
     """ Aligns a single 3D volume to another using antspy.
