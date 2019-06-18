@@ -5,7 +5,7 @@
 #SBATCH --mail-type=ALL
 #SBATCH --time=6:00:00
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=10
 
 ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS="12"
 
