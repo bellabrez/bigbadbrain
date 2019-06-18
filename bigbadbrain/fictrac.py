@@ -23,6 +23,10 @@ def load_fictrac(directory, file='fictrac.dat'):
     -------
     fictrac_data: pandas dataframe of all parameters saved by fictrac """
 
+    for item in os.listdir(directory):
+      if '.dat' in item:
+        file = item
+
     with open(os.path.join(directory, file),'r') as f:
         df = pd.DataFrame(l.rstrip().split() for l in f)
 
