@@ -51,7 +51,7 @@ for fly_idx, folder in enumerate(folders):
         timestamps = bbb.load_timestamps(os.path.join(directory, 'imaging'))
 
         if behavior:
-            fictrac = bbb.load_fictrac(s.path.join(directory, 'fictrac'))
+            fictrac = bbb.load_fictrac(os.path.join(directory, 'fictrac'))
         if visual:
             unique_stimuli = bbb.get_stimuli(os.path.join(directory, 'visual'))
         
