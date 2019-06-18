@@ -26,9 +26,8 @@ def get_stimuli(directory):
     -------
     unique_stimuli: dictionary of presented stimuli and their onset times. """
 
-    vision_path = os.path.join(directory, 'visual')
-    t,pd1,pd2 = load_photodiode(vision_path)
-    stimuli, unique_stimuli = load_visual_stimuli_data(vision_path)
+    t,pd1,pd2 = load_photodiode(directory)
+    stimuli, unique_stimuli = load_visual_stimuli_data(directory)
     stimuli_starts = parse_stim_starts_photodiode(pd1,stimuli)
     unique_stimuli = set_unique_stimuli_display_times(unique_stimuli, stimuli, stimuli_starts)
     return unique_stimuli
