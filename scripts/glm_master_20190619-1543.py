@@ -20,7 +20,7 @@ folders = bbb.get_fly_folders(root_path, desired_flies)
 ### What brain areas and channels? ###
 ######################################
 channels = ['green']
-brain_regions = ['optic_functional_3'] # if not nested, put ''
+brain_regions = ['func_0', 'func_1'] # if not nested, put ''
 
 ################################
 ### Perform visual analysis? ###
