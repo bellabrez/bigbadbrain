@@ -1,6 +1,9 @@
 import sys
 import os
 import numpy as np
+import json
+import copy
+from collections import OrderedDict
 from scipy.linalg import toeplitz
 from sklearn.linear_model import LassoLarsIC
 
@@ -164,7 +167,7 @@ def fit_glm(brain, fictrac, beta_len, single_slice=False):
     return scores, betas
 
 @timing
-def save_glm_map(scores, betas, directory, channel, param=None):
+def save_glm_map(scores, betas, directory, metadict):
     """ Will save scores and betas (outputs of glms) into nifti files.
 
     Creates and saves in subdirectory "glm".
@@ -181,21 +184,52 @@ def save_glm_map(scores, betas, directory, channel, param=None):
     -------
     Nothing. """
 
-    # Make subfolder if it doesn't exist
+    # Make subfolder if it doesn't exist (and empty json)
     subfolder = 'glm'
-    directory = os.path.join(directory, subfolder)
-    if not os.path.exists(directory):
-        os.makedirs(directory)
+    glm_directory = os.path.join(directory, subfolder)
+    glm_file = os.path.join(glm_directory, 'glm.json')
+    if not os.path.exists(glm_directory):
+        os.makedirs(glm_directory)
+        with open(glm_file, 'w') as f:
+            json.dump([], f, indent=4)
  
+    # Get experiment number
+    expt_folder = os.path.split(directory)[-1]
+    expt_num = expt_folder.split('_')[-1]
+
+    # Get fly number
+    fly_folder = os.path.split(os.path.split(directory)[0])[-1]
+    fly_num = fly_folder.split('_')[-1]
+
+    # Get glm analysis number
+    if len(os.listdir(glm_directory)) <= 1:
+        glm_num = 0
+    else:
+        items = os.listdir(glm_directory)
+        glm_nums = [int(x.split('_')[3]) for x in items]
+        glm_num = max(glm_nums)+1
+
     # Save scores
-    file = 'multivariate_analysis_' + channel + '_' + param + '.nii'
+    file = 'glm' + '_' + fly_num + '_' + expt_num + '_' + glm_num + '_.nii'
     save_file = os.path.join(directory, file)
     ants.image_write(ants.from_numpy(scores), save_file)
 
     # Save betas
-    file = 'multivariate_analysis_betas_' + channel + '_' + param + '.nii'
+    file = 'glm' + '_' + fly_num + '_' + expt_num + '_' + glm_num + 'betas_.nii'
     save_file = os.path.join(directory, file)
     ants.image_write(ants.from_numpy(betas), save_file)
+
+    # Add glm name to metadata dict
+    metadict.update({'glm_name': file})
+    metadict.move_to_end('glm_name', last=False)
+
+    # Add to glm.json
+    with open('result.json', 'r+') as f:
+        metadata = json.load(f)
+        metadata.append(metadict)
+        f.seek(0)
+        json.dump(metadata, f, indent=4)
+        f.truncate()
 
 @timing
 def create_multivoxel_X_matrix(brain, dims, beta_len):
@@ -268,3 +302,11 @@ def fit_all_voxel_glm(brain, fictrac):
     sys.stdout.flush()
 
     return score, betas
+
+def make_glm_meta_dict(glmtype, channel, dict_info):
+    metadict = OrderedDict()
+    metadict.update(dict_info)
+    metadict.update({'channel': channel, 'type': glmtype})
+    metadict.move_to_end('channel', last=False)
+    metadict.move_to_end('type', last=False)
+    return metadict
