@@ -203,7 +203,7 @@ def save_glm_map(scores, betas, directory, metadict):
 
     # Get glm analysis number
     if len(os.listdir(glm_directory)) <= 1:
-        glm_num = 0
+        glm_num = '0'
     else:
         items = os.listdir(glm_directory)
         glm_nums = [int(x.split('_')[3]) for x in items]
