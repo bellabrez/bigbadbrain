@@ -3,6 +3,7 @@ from time import time
 import os
 import sys
 import scipy
+import copy
 
 sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
 import ants
