@@ -224,7 +224,7 @@ def save_glm_map(scores, betas, directory, metadict):
     metadict.move_to_end('glm_name', last=False)
 
     # Add to glm.json
-    with open('result.json', 'r+') as f:
+    with open(glm_file, 'r+') as f:
         metadata = json.load(f)
         metadata.append(metadict)
         f.seek(0)
