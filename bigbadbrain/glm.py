@@ -195,11 +195,11 @@ def save_glm_map(scores, betas, directory, metadict):
  
     # Get experiment number
     expt_folder = os.path.split(directory)[-1]
-    expt_num = expt_folder.split('_')[-1]
+    expt_num = str(expt_folder.split('_')[-1])
 
     # Get fly number
     fly_folder = os.path.split(os.path.split(directory)[0])[-1]
-    fly_num = fly_folder.split('_')[-1]
+    fly_num = str(fly_folder.split('_')[-1])
 
     # Get glm analysis number
     if len(os.listdir(glm_directory)) <= 1:
@@ -207,7 +207,7 @@ def save_glm_map(scores, betas, directory, metadict):
     else:
         items = os.listdir(glm_directory)
         glm_nums = [int(x.split('_')[3]) for x in items]
-        glm_num = max(glm_nums)+1
+        glm_num = str(max(glm_nums)+1)
 
     # Save scores
     file = 'glm' + '_' + fly_num + '_' + expt_num + '_' + glm_num + '_.nii'
