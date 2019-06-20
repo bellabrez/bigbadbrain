@@ -211,12 +211,12 @@ def save_glm_map(scores, betas, directory, metadict):
 
     # Save scores
     file = 'glm' + '_' + fly_num + '_' + expt_num + '_' + glm_num + '_.nii'
-    save_file = os.path.join(directory, file)
+    save_file = os.path.join(glm_directory, file)
     ants.image_write(ants.from_numpy(scores), save_file)
 
     # Save betas
-    file = 'glm' + '_' + fly_num + '_' + expt_num + '_' + glm_num + 'betas_.nii'
-    save_file = os.path.join(directory, file)
+    file = 'glm' + '_' + fly_num + '_' + expt_num + '_' + glm_num + '_betas_.nii'
+    save_file = os.path.join(glm_directory, file)
     ants.image_write(ants.from_numpy(betas), save_file)
 
     # Add glm name to metadata dict
