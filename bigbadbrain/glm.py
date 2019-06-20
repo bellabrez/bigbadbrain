@@ -206,6 +206,8 @@ def save_glm_map(scores, betas, directory, metadict):
         glm_num = '0'
     else:
         items = os.listdir(glm_directory)
+        #remove glm.json
+        items = [x for x in items if 'glm.json' not in x]
         glm_nums = [int(x.split('_')[3]) for x in items]
         glm_num = str(max(glm_nums)+1)
 
