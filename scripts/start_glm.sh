@@ -16,4 +16,4 @@ module load py-pandas/0.23.0_py36
 module load viz
 module load py-scikit-learn/0.19.1_py36
 
-python3 /home/users/brezovec/projects/bigbadbrain/scripts/glm_master_20190617-0618.py
+python3 /home/users/brezovec/projects/bigbadbrain/scripts/glm_master_20190619-1543.py
