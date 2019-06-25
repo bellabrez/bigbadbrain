@@ -1,4 +1,5 @@
 import os
+import argparse
 
 def main(args):
     # this file will use os.system to start separate glm jobs
@@ -27,7 +28,7 @@ def main(args):
     print('Proceeding with these experiment folders: {}'.format(expt_folders))
 
     # Launch glms
-    if behavior:
+    if args.behavior:
         jobs = [['sbatch', 'behavior_glm.sh', expt, channel, behavior, sign]
                 for expt in expt_folders
                 for channel in args.channels
