@@ -29,12 +29,12 @@ def main(args):
 
     # Launch glms
     if args.behavior:
-        jobs = [['sbatch', 'behavior_glm.sh', expt, channel, behavior, sign]
+        jobs = [' '.join(['sbatch', 'behavior_glm.sh', expt, channel, behavior, sign])
                 for expt in expt_folders
                 for channel in args.channels
                 for behavior in args.b_behaviors
                 for sign in args.b_signs]
-        jobs = [' '.join(x) for x in jobs]
+        jobs = ["'" + job + "'" for job in jobs]
         #[print(job) for job in jobs]
         [os.system(job) for job in jobs]
 
