@@ -34,7 +34,6 @@ def main(args):
                 for channel in args.channels
                 for behavior in args.b_behaviors
                 for sign in args.b_signs]
-        jobs = ["'" + job + "'" for job in jobs]
         #[print(job) for job in jobs]
         [os.system(job) for job in jobs]
 

@@ -13,6 +13,9 @@ ml py-pandas/0.23.0_py36
 ml viz
 ml py-scikit-learn/0.19.1_py36
 ###SBATCH --output=./outputs_moco_partial/slurm-%j.out
-INPUT="$1"
+EXPT="$1"
+CHANNEL="$2"
+BEHAVIOR="$3"
+SIGN="$4"
 
-python3 /home/users/brezovec/projects/bigbadbrain/scripts/behavior_glm.py "$INPUT"
+python3 /home/users/brezovec/projects/bigbadbrain/scripts/behavior_glm.py "$EXPT" "$CHANNEL" "$BEHAVIOR" "$SIGN"
