@@ -1,5 +1,6 @@
 import os
 import argparse
+import bigbadbrain as bbb
 
 def main(args):
     # this file will use os.system to start separate glm jobs
