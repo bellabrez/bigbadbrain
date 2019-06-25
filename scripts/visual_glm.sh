@@ -16,6 +16,9 @@ ml py-scikit-learn/0.19.1_py36
 
 EXPT="$1"
 CHANNEL="$2"
-STIM_IDX="$3"
+BIN_SIZE="$3"
+PRE_DUR="$4"
+POST_DUR="$5"
+STIM_IDX="$6"
 
-python3 /home/users/brezovec/projects/bigbadbrain/scripts/visual_glm.py "$EXPT" "$CHANNEL" "$STIM_IDX"
+python3 /home/users/brezovec/projects/bigbadbrain/scripts/visual_glm.py "$EXPT" "$CHANNEL" "$BIN_SIZE" "$PRE_DUR" "$POST_DUR" "$STIM_IDX"

@@ -6,8 +6,10 @@ import bigbadbrain as bbb
 def main(args):
     directory = args[0]
     channel = args[1]
-    stim_idx = int(args[2])
-
+    bin_size = args[2]
+    pre_dur = args[3]
+    post_dur = args[4]
+    stim_idx = int(args[5])
 
     bbb.announce_start(directory)
     timestamps = bbb.load_timestamps(os.path.join(directory, 'imaging'))
