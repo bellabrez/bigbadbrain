@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=behavior_glm
+#SBATCH --job-name=visual_glm
 #SBATCH --partition=trc
 #SBATCH --time=3:30:00
 #SBATCH --ntasks=1
@@ -16,7 +16,6 @@ ml py-scikit-learn/0.19.1_py36
 
 EXPT="$1"
 CHANNEL="$2"
-BEHAVIOR="$3"
-SIGN="$4"
+STIM_IDX="$3"
 
-python3 /home/users/brezovec/projects/bigbadbrain/scripts/behavior_glm.py "$EXPT" "$CHANNEL" "$BEHAVIOR" "$SIGN"
+python3 /home/users/brezovec/projects/bigbadbrain/scripts/visual_glm.py "$EXPT" "$CHANNEL" "$STIM_IDX"

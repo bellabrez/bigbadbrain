@@ -195,12 +195,11 @@ def fft_signal(signal, sampling_rate, duration):
     Y = np.fft.fft(y)/n # fft computing and normalization
     Y = Y[range(int(n/2))]
 
-def announce_start(directory, fly_idx, folders):
+def announce_start(directory):
     ### Send email and define folder path ###
     print('\n~~~~ Starting analysis of {} ~~~~'.format(directory))
     sys.stdout.flush()
-    send_email('Starting {} ({} of {}).'.format(directory, fly_idx+1, len(folders)), 'wow')
-
+    send_email('Starting {}'.format(directory), 'wow')
 
 def create_bins(bin_size, pre_dur, post_dur):
     """ Helper function to create a bin vector based on parameters.
