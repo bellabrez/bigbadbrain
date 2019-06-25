@@ -1,6 +1,5 @@
 import os
 import argparse
-import bigbadbrain as bbb
 
 def main(args):
     # this file will use os.system to start separate glm jobs
@@ -40,13 +39,39 @@ def main(args):
 
     if args.visual:
         for expt in expt_folders:
-            stimuli, unique_stimuli = bbb.load_visual_stimuli_data(os.path.join(expt, 'visual'))
+            stimuli, unique_stimuli = load_visual_stimuli_data(os.path.join(expt, 'visual'))
             jobs = [' '.join(['sbatch', 'visual_glm.sh', expt, channel, str(args.v_bin_size),\
                     str(args.v_pre_dur), str(args.v_post_dur), str(stim_index)])
                     for channel in args.channels
                     for stim_index in range(len(unique_stimuli))]
             #[print(job) for job in jobs]
             [os.system(job) for job in jobs]
+
+def load_visual_stimuli_data(vision_path):
+    """ Gets unique stimuli from 'stimuli_master.npy', and removes 'Grey' stimuli.
+
+    Parameters
+    ----------
+    vision_path: full path to vision folder
+
+    Returns
+    -------
+    stimuli: List of all stimuli presented in order
+    unique_stimuli: List of unique stimuli
+
+    """
+    print('loading visual stimuli data... ',end='')
+    stimuli = np.load(os.path.join(vision_path, 'stimuli_master.npy'))
+
+    # remove grey_stimuli
+    stimuli = [stim[0] for i,stim in enumerate(stimuli) if stimuli[i,0]['name'] != 'Grey']
+
+    # get unique stimuli
+    unique_stimuli = [dict(y) for y in set(tuple(x.items()) for x in stimuli)]
+
+    print('done')
+
+    return stimuli, unique_stimuli
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
