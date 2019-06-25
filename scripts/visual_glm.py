@@ -6,7 +6,7 @@ import bigbadbrain as bbb
 def main(args):
     directory = args[0]
     channel = args[1]
-    stim_idx = args[2]
+    stim_idx = int(args[2])
 
 
     bbb.announce_start(directory)
