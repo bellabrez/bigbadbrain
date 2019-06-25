@@ -89,6 +89,13 @@ def get_motcorr_brain(directory, channel):
 
 @timing
 def get_z_brain(directory, channel):
+    
+    if channel == 'g':
+        channel = 'green'
+
+    if channel == 'r':
+        channel = 'red'
+
     zbrain_file = os.path.join(directory, 'brain_zscored_' + channel + '.nii')
     try:
         print('Trying to load z-scored brain.')
