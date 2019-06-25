@@ -35,8 +35,8 @@ def main(args):
                 for behavior in args.b_behaviors
                 for sign in args.b_signs]
         jobs = [' '.join(x) for x in jobs]
-        [print(job) for job in jobs]
-        #[os.system(job) for job in jobs]
+        #[print(job) for job in jobs]
+        [os.system(job) for job in jobs]
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
