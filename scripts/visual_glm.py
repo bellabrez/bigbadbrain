@@ -6,9 +6,9 @@ import bigbadbrain as bbb
 def main(args):
     directory = args[0]
     channel = args[1]
-    bin_size = args[2]
-    pre_dur = args[3]
-    post_dur = args[4]
+    bin_size = int(args[2])
+    pre_dur = int(args[3])
+    post_dur = int(args[4])
     stim_idx = int(args[5])
 
     bbb.announce_start(directory)
