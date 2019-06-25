@@ -39,13 +39,13 @@ def main(args):
         [os.system(job) for job in jobs]
 
     if args.visual:
-        stimuli, unique_stimuli = bbb.load_visual_stimuli_data(os.path.join(directory, 'visual'))
-        jobs = [' '.join(['sbatch', 'visual_glm.sh', expt, channel, stim_index])
-                for expt in expt_folders
-                for channel in args.channels
-                for stim_index in range(len(unique_stimuli))]
-        #[print(job) for job in jobs]
-        [os.system(job) for job in jobs]
+        for expt in expt_folders:
+            stimuli, unique_stimuli = bbb.load_visual_stimuli_data(os.path.join(expt, 'visual'))
+            jobs = [' '.join(['sbatch', 'visual_glm.sh', expt, channel, stim_index])
+                    for channel in args.channels
+                    for stim_index in range(len(unique_stimuli))]
+            #[print(job) for job in jobs]
+            [os.system(job) for job in jobs]
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
