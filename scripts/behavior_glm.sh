@@ -4,7 +4,7 @@
 #SBATCH --time=3:30:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=10
-#SBATCH --output=./slurm_output/slurm-%j.out
+#SBATCH --output=./output/slurm-%j.out
 
 
 ml gcc/6.3.0
