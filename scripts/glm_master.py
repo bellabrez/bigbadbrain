@@ -41,7 +41,8 @@ def main(args):
     if args.visual:
         for expt in expt_folders:
             stimuli, unique_stimuli = bbb.load_visual_stimuli_data(os.path.join(expt, 'visual'))
-            jobs = [' '.join(['sbatch', 'visual_glm.sh', expt, channel, args.v_bin_size, args.v_pre_dur, args.v_post_dur, str(stim_index)])
+            jobs = [' '.join(['sbatch', 'visual_glm.sh', expt, channel, str(args.v_bin_size),\
+                    str(args.v_pre_dur), str(args.v_post_dur), str(stim_index)])
                     for channel in args.channels
                     for stim_index in range(len(unique_stimuli))]
             #[print(job) for job in jobs]
