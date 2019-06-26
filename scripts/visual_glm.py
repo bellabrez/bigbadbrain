@@ -13,9 +13,11 @@ def main(args):
 
     #bbb.announce_start(directory)
     timestamps = bbb.load_timestamps(os.path.join(directory, 'imaging'))
-    unique_stimuli = bbb.get_stimuli(os.path.join(directory, 'visual'))
 
-    stimulus = unique_stimuli[stim_idx]
+    # get stim info
+    file = os.path.join(directory, 'visual', 'visual.json')
+    with open(file, 'r') as f:  
+        stimulus = json.load(f)[stim_idx]
     print('Visual glm says stim_idx is {}'.format(stim_idx))
 
     #brain = bbb.get_z_brain(directory, channel)

@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import argparse
+import json
 
 def main(args):
     # this file will use os.system to start separate glm jobs
@@ -40,39 +41,20 @@ def main(args):
 
     if args.visual:
         for expt in expt_folders:
-            stimuli, unique_stimuli = load_visual_stimuli_data(os.path.join(expt, 'visual'))
+            num_stim = get_num_stim(os.path.join(expt, 'visual', 'visual.json'))
             jobs = [' '.join(['sbatch', 'visual_glm.sh', expt, channel, str(args.v_bin_size),\
                     str(args.v_pre_dur), str(args.v_post_dur), str(stim_index)])
                     for channel in args.channels
-                    for stim_index in range(len(unique_stimuli))]
+                    for stim_index in range(num_stim)]
             #[print(job) for job in jobs]
             [os.system(job) for job in jobs]
 
-def load_visual_stimuli_data(vision_path):
-    """ Gets unique stimuli from 'stimuli_master.npy', and removes 'Grey' stimuli.
+def get_num_stim(file):
+    with open(file, 'r') as f:  
+        data = json.load(f)
+        num_stim = len(data)
+    return num_stim
 
-    Parameters
-    ----------
-    vision_path: full path to vision folder
-
-    Returns
-    -------
-    stimuli: List of all stimuli presented in order
-    unique_stimuli: List of unique stimuli
-
-    """
-    print('loading visual stimuli data... ',end='')
-    stimuli = np.load(os.path.join(vision_path, 'stimuli_master.npy'))
-
-    # remove grey_stimuli
-    stimuli = [stim[0] for i,stim in enumerate(stimuli) if stimuli[i,0]['name'] != 'Grey']
-
-    # get unique stimuli
-    unique_stimuli = [dict(y) for y in set(tuple(x.items()) for x in stimuli)]
-
-    print('done')
-
-    return stimuli, unique_stimuli
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
