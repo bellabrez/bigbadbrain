@@ -25,6 +25,12 @@ def get_motcorr_brain(directory, channel):
     if not os.path.exists(motcorr_directory):
         os.makedirs(motcorr_directory)
 
+    if channel == 'g':
+        channel = 'green'
+
+    if channel == 'r':
+        channel = 'red'
+
     # try to open motion corrected brain, else make it
     try:
         print('Trying to load {} motion-corrected brain.'.format(channel))
@@ -83,6 +89,13 @@ def get_motcorr_brain(directory, channel):
 
 @timing
 def get_z_brain(directory, channel):
+    
+    if channel == 'g':
+        channel = 'green'
+
+    if channel == 'r':
+        channel = 'red'
+
     zbrain_file = os.path.join(directory, 'brain_zscored_' + channel + '.nii')
     try:
         print('Trying to load z-scored brain.')
