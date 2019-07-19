@@ -194,7 +194,7 @@ def parse_stim_starts_photodiode(pd, stimuli):
     pd_on_edges = pd_off[np.where(np.diff(pd_off)>min_gap)[0]]
 
     # Remove any very early on edges cause by projector still getting ready etc.
-    remove_on_before = 30*1000 # Currently a 30 sec minimum
+    remove_on_before = 5*1000 # Currently a 30 sec minimum
     pd_on_edges = [x for x in pd_on_edges if x > remove_on_before]
     
     # Add on edge at 0
