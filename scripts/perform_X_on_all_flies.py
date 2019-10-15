@@ -24,3 +24,6 @@ def main():
             for expt_folder in expt_folders:
                 print('Performing X on: {}'.format(expt_folder))
                 bbb.perform_bleaching_analysis(expt_folder)
+
+if __name__ == '__main__':
+    main()
