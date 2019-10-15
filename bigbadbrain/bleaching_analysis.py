@@ -4,6 +4,7 @@ import os
 import matplotlib.pyplot as plt
 from skimage.filters import threshold_triangle
 from bigbadbrain.utils import timing
+import bigbadbrain as bbb
 
 def perform_bleaching_analysis(expt_folder):
     brain_path = os.path.join(expt_folder, 'imaging', 'functional_channel_2.nii')
