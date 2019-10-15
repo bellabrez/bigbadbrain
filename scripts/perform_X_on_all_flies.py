@@ -16,14 +16,17 @@ def main():
     fly_folders = [os.path.join(root_directory,x) for x in os.listdir(root_directory) if 'fly' in x]
     bbb.sort_nicely(fly_folders)
     fly_folders = fly_folders[::-1]
-    fly_folders = [os.path.join(root_directory, 'fly_49')]
+    #fly_folders = [os.path.join(root_directory, 'fly_49')]
     for fly in fly_folders:
         expt_folders = []
         expt_folders = [os.path.join(fly,x) for x in os.listdir(fly) if 'func' in x]
         if len(expt_folders) > 0:
             for expt_folder in expt_folders:
                 print('Performing X on: {}'.format(expt_folder))
-                bbb.perform_bleaching_analysis(expt_folder)
+                try:
+                    bbb.perform_bleaching_analysis(expt_folder)
+                except:
+                    print('Try block failed for {}'.format(expt_folder))
 
 if __name__ == '__main__':
     main()
