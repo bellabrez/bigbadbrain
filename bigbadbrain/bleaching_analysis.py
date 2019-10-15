@@ -6,9 +6,9 @@ from skimage.filters import threshold_triangle
 from bigbadbrain.utils import timing
 
 def perform_bleaching_analysis(expt_folder):
-    brain_path = os.path.join(directory, 'imaging', 'functional_channel_2.nii')
+    brain_path = os.path.join(expt_folder, 'imaging', 'functional_channel_2.nii')
     brain = bbb.load_numpy_brain(brain_path)
-    save_path = os.path.join(directory, 'imaging')
+    save_path = os.path.join(expt_folder, 'imaging')
 
     plt.rcParams.update({'font.size': 24})
 
