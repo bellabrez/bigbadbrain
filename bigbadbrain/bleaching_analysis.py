@@ -7,7 +7,10 @@ from bigbadbrain.utils import timing
 import bigbadbrain as bbb
 import psutil
 
-def perform_bleaching_analysis(expt_folder):
+def main(expt_folder):
+
+    print('Expt folder is: {}'.format(expt_folder))
+
     memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
     print('Starting memory usage: {:.2f}GB'.format(memory_usage))
     sys.stdout.flush()
@@ -133,3 +136,6 @@ def perform_bleaching_analysis(expt_folder):
     sys.stdout.flush()
 
     return None
+
+if __name__ == '__main__':
+    main(sys.argv[1])

@@ -28,7 +28,9 @@ def main():
                 sys.stdout.flush()
                 print('Performing X on: {}'.format(expt_folder))
                 try:
-                    _ = bbb.perform_bleaching_analysis(expt_folder)
+                    #_ = bbb.perform_bleaching_analysis(expt_folder)
+                    os.system("sbatch run_X_single.sh {}".format(expt_folder))
+
                 except:
                     print('Try block failed for {}'.format(expt_folder))
 
