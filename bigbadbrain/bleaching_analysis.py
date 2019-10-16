@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from skimage.filters import threshold_triangle
 from bigbadbrain.utils import timing
 import bigbadbrain as bbb
+import psutil
 
 def perform_bleaching_analysis(expt_folder):
     memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9

@@ -28,7 +28,7 @@ def main():
                 sys.stdout.flush()
                 print('Performing X on: {}'.format(expt_folder))
                 try:
-                    bbb.perform_bleaching_analysis(expt_folder)
+                    _ = bbb.perform_bleaching_analysis(expt_folder)
                 except:
                     print('Try block failed for {}'.format(expt_folder))
 
