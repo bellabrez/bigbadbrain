@@ -7,6 +7,7 @@ from bigbadbrain.utils import timing
 import bigbadbrain as bbb
 
 def perform_bleaching_analysis(expt_folder):
+    brain = None
     brain_path = os.path.join(expt_folder, 'imaging', 'functional_channel_2.nii')
     brain = bbb.load_numpy_brain(brain_path)
     save_path = os.path.join(expt_folder, 'imaging')

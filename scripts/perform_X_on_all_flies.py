@@ -9,6 +9,7 @@ import bigbadbrain as bbb
 import pandas as pd
 import json
 import bigbadbrain as bbb
+import psutil
 
 def main():
     print('Performing X on all flies.')
@@ -22,6 +23,9 @@ def main():
         expt_folders = [os.path.join(fly,x) for x in os.listdir(fly) if 'func' in x]
         if len(expt_folders) > 0:
             for expt_folder in expt_folders:
+                memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
+                print('Current memory usage: {:.2f}GB'.format(memory_usage))
+                sys.stdout.flush()
                 print('Performing X on: {}'.format(expt_folder))
                 try:
                     bbb.perform_bleaching_analysis(expt_folder)
