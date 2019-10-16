@@ -15,4 +15,4 @@ ml py-scikit-learn/0.19.1_py36
 
 VARS="$1"
 echo "$VARS"
-python3 /home/users/brezovec/projects/bigbadbrain/bleaching_analysis.py $VARS
+python3 /home/users/brezovec/projects/bigbadbrain/bigbadbrain/bleaching_analysis.py $VARS
