@@ -24,7 +24,7 @@ def main():
         if len(expt_folders) > 0:
             for expt_folder in expt_folders:
                 memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
-                print('Current memory usage: {:.2f}GB'.format(memory_usage))
+                print('Current memory usage in loop: {:.2f}GB'.format(memory_usage))
                 sys.stdout.flush()
                 print('Performing X on: {}'.format(expt_folder))
                 try:

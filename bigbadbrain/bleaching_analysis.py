@@ -7,6 +7,10 @@ from bigbadbrain.utils import timing
 import bigbadbrain as bbb
 
 def perform_bleaching_analysis(expt_folder):
+    memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
+    print('Starting memory usage: {:.2f}GB'.format(memory_usage))
+    sys.stdout.flush()
+
     brain = None
     brain_path = os.path.join(expt_folder, 'imaging', 'functional_channel_2.nii')
     brain = bbb.load_numpy_brain(brain_path)
@@ -122,3 +126,9 @@ def perform_bleaching_analysis(expt_folder):
 
     save_file = os.path.join(save_path, 'bleaching_analysis.npy')
     np.save(save_file, output_data)
+
+    memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
+    print('Ending memory usage: {:.2f}GB'.format(memory_usage))
+    sys.stdout.flush()
+
+    return None
