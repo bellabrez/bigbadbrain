@@ -13,7 +13,7 @@ def main(expt_folder):
 
     # Get fly num and expt num for graph titles
     expt_num = os.path.split(expt_folder)[-1]
-    fly_num = os.path.split(os.path.split(expt_folder)[0])
+    fly_num = os.path.split(os.path.split(expt_folder)[0])[-1]
     title = 'Bleaching, {}, {}'.format(fly_num,expt_num)
 
     memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
