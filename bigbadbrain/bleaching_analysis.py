@@ -16,11 +16,27 @@ def main(expt_folder):
     sys.stdout.flush()
 
     brain = None
-    brain_path = os.path.join(expt_folder, 'imaging', 'functional_channel_2.nii')
-    brain = bbb.load_numpy_brain(brain_path)
+    try:
+        brain_path = os.path.join(expt_folder, 'imaging', 'functional_channel_2.nii')
+        brain = bbb.load_numpy_brain(brain_path)
+    except:
+        print('Failed to load functional_channel_2.nii')
+        brain_path = os.path.join(expt_folder, 'imaging', 'functional.nii')
+        brain = bbb.load_numpy_brain(brain_path)
+        print('Successfully loaded functional.nii')
+
     save_path = os.path.join(expt_folder, 'imaging')
 
     plt.rcParams.update({'font.size': 24})
+
+    # Convert to 8-bit if it is 13-bit
+    if np.max(brain[:,:,:,:10]) > 256: # Just get max from first 10 frames
+        bit_depth = 13
+        brain = np.multiply(brain,(2^8/2^13))
+    else:
+        bit_depth = 8
+
+    print('Detected bit depth: {}'.format(bit_depth))
 
     ##############################
     ### Output Bleaching Curve ###
@@ -55,10 +71,21 @@ def main(expt_folder):
 
     threshold = threshold_triangle(np.ndarray.flatten(brain[:,:,:,::100]))
 
-    bins = np.ndarray.tolist(np.arange(0,260,5))
-    fig = plt.figure(figsize=(10,10))
+    # The number of histograms that will be created
+    # ie, how many partitions to split timeseries into
     num_steps = 5
+
+    # Under sampling each partition
+    # Will run faster with bigger numbers
     frame_jump_size = 200
+
+    # For final histogram
+    #num_bins = 50
+
+    #bins = np.ndarray.tolist(np.arange(0,2^bit_depth,int(2^bit_depth/num_bins)))
+    bins = np.ndarray.tolist(np.arange(0,255,5))
+    fig = plt.figure(figsize=(10,10))
+
     step = int(brain.shape[-1]/num_steps)
 
     start_color = (4,217,255)
@@ -123,10 +150,10 @@ def main(expt_folder):
     #################
 
     output_data = {'percent_signal_lost': percent_signal_lost,
-               'bleaching_slope': linear_fit[0],
-               'threshold': threshold,
-               'percent_above_thresh': percent_above_thresh,
-               'intensity_histogram_over_time': bin_save}
+                   'bleaching_slope': linear_fit[0],
+                   'threshold': threshold,
+                   'percent_above_thresh': percent_above_thresh,
+                   'intensity_histogram_over_time': bin_save}
 
     save_file = os.path.join(save_path, 'bleaching_analysis.npy')
     np.save(save_file, output_data)
