@@ -10,6 +10,8 @@ import psutil
 def main(expt_folder):
 
     print('Expt folder is: {}'.format(expt_folder))
+    directory_split = os.path.split(expt_folder)
+    title = 'Bleaching, {}, {}'.format(directory_split[-2],directory_split[-1])
 
     memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
     print('Starting memory usage: {:.2f}GB'.format(memory_usage))
@@ -52,7 +54,7 @@ def main(expt_folder):
 
     plt.xlabel('Frame Num')
     plt.ylabel('Avg signal (8bit)')
-    plt.title('Bleaching')
+    plt.title(title)
 
     percent_signal_lost = linear_fit[0]*brain.shape[-1]/linear_fit[1]*-100
     print('percent_signal_lost: {}'.format(percent_signal_lost))
@@ -120,7 +122,7 @@ def main(expt_folder):
     plt.xlabel("Intensity, 8 bits")
     plt.ylabel("Frequency, %")
     plt.legend(loc=1)
-    plt.title("Bleaching Histogram")
+    plt.title(title)
 
     fname = os.path.join(save_path, 'bleaching_1.png')
     plt.savefig(fname,dpi=100,bbox_inches='tight')
@@ -140,7 +142,7 @@ def main(expt_folder):
     plt.plot(xs, np.multiply(percent_above_thresh,100),color=np.divide((51, 212, 155),255),linewidth=3)
     plt.ylabel('Voxels above thresh (%)')
     plt.xlabel('Frame Num')
-    plt.title('Bleaching')
+    plt.title(title)
 
     fname = os.path.join(save_path, 'bleaching_2.png')
     plt.savefig(fname,dpi=100,bbox_inches='tight')
