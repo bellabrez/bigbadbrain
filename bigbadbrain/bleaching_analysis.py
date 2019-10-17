@@ -32,7 +32,7 @@ def main(expt_folder):
     # Convert to 8-bit if it is 13-bit
     if np.max(brain[:,:,:,:10]) > 256: # Just get max from first 10 frames
         bit_depth = 13
-        brain = np.multiply(brain,(2^8/2^13))
+        brain = np.multiply(brain,(2**8/2**13))
     else:
         bit_depth = 8
 
@@ -82,7 +82,7 @@ def main(expt_folder):
     # For final histogram
     #num_bins = 50
 
-    #bins = np.ndarray.tolist(np.arange(0,2^bit_depth,int(2^bit_depth/num_bins)))
+    #bins = np.ndarray.tolist(np.arange(0,2**bit_depth,int(2**bit_depth/num_bins)))
     bins = np.ndarray.tolist(np.arange(0,255,5))
     fig = plt.figure(figsize=(10,10))
 
