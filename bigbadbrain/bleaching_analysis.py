@@ -10,8 +10,11 @@ import psutil
 def main(expt_folder):
 
     print('Expt folder is: {}'.format(expt_folder))
-    directory_split = os.path.split(expt_folder)
-    title = 'Bleaching, {}, {}'.format(directory_split[-2],directory_split[-1])
+
+    # Get fly num and expt num for graph titles
+    expt_num = os.path.split(expt_folder)[-1]
+    fly_num = os.path.split(os.path.split(expt_folder)[0])
+    title = 'Bleaching, {}, {}'.format(fly_num,expt_num)
 
     memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
     print('Starting memory usage: {:.2f}GB'.format(memory_usage))
