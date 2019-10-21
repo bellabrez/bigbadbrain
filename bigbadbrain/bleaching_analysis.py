@@ -158,7 +158,8 @@ def main(expt_folder):
                    'bleaching_slope': linear_fit[0],
                    'threshold': threshold,
                    'percent_above_thresh': percent_above_thresh,
-                   'intensity_histogram_over_time': bin_save}
+                   'intensity_histogram_over_time': bin_save,
+                   'bleaching': data_mean}
 
     save_file = os.path.join(save_path, 'bleaching_analysis.npy')
     np.save(save_file, output_data)
