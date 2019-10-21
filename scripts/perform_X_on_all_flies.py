@@ -17,7 +17,12 @@ def main():
     fly_folders = [os.path.join(root_directory,x) for x in os.listdir(root_directory) if 'fly' in x]
     bbb.sort_nicely(fly_folders)
     fly_folders = fly_folders[::-1]
-    #fly_folders = [os.path.join(root_directory, 'fly_37')]
+
+    # TO SELECT ONLY A SUBSET OF FLIES
+    fly_folders = []
+    for i in np.arange(11,31):
+        fly_folders.append(os.path.join(root_directory, 'fly_{}'.format(i)))
+
     for fly in fly_folders:
         expt_folders = []
         expt_folders = [os.path.join(fly,x) for x in os.listdir(fly) if 'func' in x]

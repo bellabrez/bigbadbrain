@@ -29,6 +29,13 @@ def main(expt_folder):
         brain_path = os.path.join(expt_folder, 'imaging', 'functional.nii')
         brain = bbb.load_numpy_brain(brain_path)
         print('Successfully loaded functional.nii')
+        try:
+            print('Failed to load functional.nii')
+            brain_path = os.path.join(expt_folder, 'imaging', 'stitched_brain_green.nii')
+            brain = bbb.load_numpy_brain(brain_path)
+            print('Successfully loaded stitched_brain_green.nii')
+        except:
+            print('FAILED to load any brain.')
 
     save_path = os.path.join(expt_folder, 'imaging')
 
