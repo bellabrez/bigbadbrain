@@ -39,7 +39,7 @@ def main(expt_folder):
                 print('Successfully loaded stitched_brain_green.nii')
             except:
                 print('FAILED to load any brain.')
-                break
+                return
 
     save_path = os.path.join(expt_folder, 'imaging')
 
