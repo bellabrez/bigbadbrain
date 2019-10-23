@@ -26,9 +26,20 @@ def main(expt_folder):
         brain = bbb.load_numpy_brain(brain_path)
     except:
         print('Failed to load functional_channel_2.nii')
-        brain_path = os.path.join(expt_folder, 'imaging', 'functional.nii')
-        brain = bbb.load_numpy_brain(brain_path)
-        print('Successfully loaded functional.nii')
+        try:
+            brain_path = os.path.join(expt_folder, 'imaging', 'functional.nii')
+            brain = bbb.load_numpy_brain(brain_path)
+            brain = brain[:,:,:,:,-1] # Take only green channel
+            print('Successfully loaded functional.nii')
+        except:
+            print('Failed to load functional.nii')
+            try: 
+                brain_path = os.path.join(expt_folder, 'imaging', 'stitched_brain_green.nii')
+                brain = bbb.load_numpy_brain(brain_path)
+                print('Successfully loaded stitched_brain_green.nii')
+            except:
+                print('FAILED to load any brain.')
+                return
 
     save_path = os.path.join(expt_folder, 'imaging')
 
@@ -158,7 +169,8 @@ def main(expt_folder):
                    'bleaching_slope': linear_fit[0],
                    'threshold': threshold,
                    'percent_above_thresh': percent_above_thresh,
-                   'intensity_histogram_over_time': bin_save}
+                   'intensity_histogram_over_time': bin_save,
+                   'bleaching': data_mean}
 
     save_file = os.path.join(save_path, 'bleaching_analysis.npy')
     np.save(save_file, output_data)
