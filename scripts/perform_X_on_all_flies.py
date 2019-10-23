@@ -17,7 +17,7 @@ def main():
     fly_folders = [os.path.join(root_directory,x) for x in os.listdir(root_directory) if 'fly' in x]
     bbb.sort_nicely(fly_folders)
     fly_folders = fly_folders[::-1]
-    #fly_folders = [os.path.join(root_directory, 'fly_37')]
+    fly_folders = [os.path.join(root_directory, 'fly_68'), os.path.join(root_directory, 'fly_69')]
     for fly in fly_folders:
         expt_folders = []
         expt_folders = [os.path.join(fly,x) for x in os.listdir(fly) if 'func' in x]
