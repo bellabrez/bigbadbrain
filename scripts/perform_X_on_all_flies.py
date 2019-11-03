@@ -24,7 +24,7 @@ def main():
     #fly_folders = []
     #for i in np.arange(11,31):
     #    fly_folders.append(os.path.join(root_directory, 'fly_{}'.format(i)))
-    fly_folders = [os.path.join(root_directory, 'fly_38')]
+    fly_folders = [os.path.join(root_directory, 'fly_1')]
 
     for fly in fly_folders:
         expt_folders = []
