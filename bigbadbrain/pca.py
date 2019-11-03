@@ -4,7 +4,7 @@ import sys
 import bigbadbrain as bbb
 from sklearn.decomposition import PCA
 
-def main(expt_folder):
+def main(directory):
 
     brain_path = os.path.join(directory, 'brain_zscored_green.nii')
     brain = bbb.load_numpy_brain(brain_path)
