@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=run_X
 #SBATCH --partition=trc
-#SBATCH --time=4:00:00
+#SBATCH --time=1:00:00
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=14
+#SBATCH --cpus-per-task=10
 #SBATCH --output=./output/slurm-%j.out
 
 ml gcc/6.3.0
@@ -15,4 +15,4 @@ ml py-scikit-learn/0.19.1_py36
 
 VARS="$1"
 echo "$VARS"
-python3 /home/users/brezovec/projects/bigbadbrain/bigbadbrain/bleaching_analysis.py $VARS
+python3 /home/users/brezovec/projects/bigbadbrain/bigbadbrain/pca.py $VARS
