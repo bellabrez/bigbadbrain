@@ -3,6 +3,7 @@ import os
 import sys
 import bigbadbrain as bbb
 from sklearn.decomposition import PCA
+from time import time
 
 def main(directory):
 
