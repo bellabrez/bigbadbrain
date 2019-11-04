@@ -1,10 +1,11 @@
 #!/bin/bash
 #SBATCH --job-name=run_X
 #SBATCH --partition=trc
-#SBATCH --time=1:00:00
+#SBATCH --time=3:00:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=10
 #SBATCH --output=./output/slurm-%j.out
+#SBATCH --mail-type=ALL
 
 ml gcc/6.3.0
 ml python/3.6.1

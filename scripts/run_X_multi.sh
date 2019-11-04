@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=run_X
+#SBATCH --job-name=run_X_trigger
 #SBATCH --partition=trc
 #SBATCH --time=4:00:00
 #SBATCH --ntasks=1
