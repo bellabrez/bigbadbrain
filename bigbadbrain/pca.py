@@ -28,9 +28,13 @@ def main(directory):
     print('Spatial is {}'.format(pca_spatial.shape))
     print('PCA duration: {}'.format(time()-t0))
 
-    save_file = os.path.join(directory, 'pca', 'scores_(spatial).npy')
+    pca_directory = os.path.join(directory, 'pca')
+    if not os.path.exists(pca_directory):
+        os.mkdir(pca_directory)
+
+    save_file = os.path.join(pca_directory, 'scores_(spatial).npy')
     np.save(save_file, pca_spatial)
-    save_file = os.path.join(directory, 'pca', 'loadings_(temporal).npy')
+    save_file = os.path.join(pca_directory, 'loadings_(temporal).npy')
     np.save(save_file, pca_loadings)
     print('Saved PCA!')
 
