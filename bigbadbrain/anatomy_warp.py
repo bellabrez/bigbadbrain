@@ -26,16 +26,16 @@ def main(directory):
     if this_anat == 'fly_12,anat_0':
         anatomy = bbb.load_numpy_brain(os.path.join(anat_folder, 'anat_mean.nii'))
         print('Loaded SPECIAL {}'.format(this_anat))
-        continue
-    try:
-        anatomy = bbb.load_numpy_brain(os.path.join(anat_folder, 'anatomy_channel_1.nii'))
-        print('Loaded {}'.format(this_anat))
-    except:
-        print('failed to load anatomy_channel_1.nii: {}'.format(this_anat))
+    else:
         try:
-            anatomy = bbb.load_numpy_brain(os.path.join(anat_folder, 'anatomy.nii'))
+            anatomy = bbb.load_numpy_brain(os.path.join(anat_folder, 'anatomy_channel_1.nii'))
+            print('Loaded {}'.format(this_anat))
         except:
-            print('failed to load anatomy.nii: {}'.format(this_anat))
+            print('failed to load anatomy_channel_1.nii: {}'.format(this_anat))
+            try:
+                anatomy = bbb.load_numpy_brain(os.path.join(anat_folder, 'anatomy.nii'))
+            except:
+                print('failed to load anatomy.nii: {}'.format(this_anat))
 
     # Rotate some brains
     if this_anat in ['fly_7,anat_0', 'fly_2,anat_0', 'fly_1,anat_0']:
