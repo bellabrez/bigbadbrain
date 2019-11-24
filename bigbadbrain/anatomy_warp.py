@@ -69,7 +69,7 @@ def main(directory):
 
     ##### Save #####
     save_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/20191123_meanbrain'
-    file = os.path.join(save_folder, '{}_{}.nii'.format(this_anat,MI_after))
+    file = os.path.join(save_folder, '{},{}.nii'.format(this_anat,MI_after))
     bbb.save_brain(file, slave2master['warpedmovout'].numpy())
 
 if __name__ == '__main__':

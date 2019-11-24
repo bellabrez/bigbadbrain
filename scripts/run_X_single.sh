@@ -3,7 +3,7 @@
 #SBATCH --partition=trc
 #SBATCH --time=0:20:00
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=2
 #SBATCH --output=./output/slurm-%j.out
 #SBATCH --mail-type=ALL
 
