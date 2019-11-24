@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=run_X
 #SBATCH --partition=trc
-#SBATCH --time=2:00:00
+#SBATCH --time=0:20:00
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=10
+#SBATCH --cpus-per-task=4
 #SBATCH --output=./output/slurm-%j.out
 #SBATCH --mail-type=ALL
 
@@ -16,4 +16,4 @@ ml py-scikit-learn/0.19.1_py36
 
 VARS="$1"
 echo "$VARS"
-python3 /home/users/brezovec/projects/bigbadbrain/bigbadbrain/pca.py $VARS
+python3 /home/users/brezovec/projects/bigbadbrain/bigbadbrain/anatomy_warp.py $VARS

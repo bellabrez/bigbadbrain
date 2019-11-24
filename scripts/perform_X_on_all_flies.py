@@ -21,15 +21,16 @@ def main():
     # TO SELECT ONLY A SUBSET OF FLIES
 
     #fly_folders = [os.path.join(root_directory, 'fly_68'), os.path.join(root_directory, 'fly_69')]
-    fly_folders = []
+    fly_folders = [1]
     #for i in np.arange(3,5,7,19,21,48,51,54,68):
-    for i in [1,3,5,7,19,21,48,51,54,68]:
-        fly_folders.append(os.path.join(root_directory, 'fly_{}'.format(i)))
+    #for i in [1,3,5,7,19,21,48,51,54,68]:
+    #    fly_folders.append(os.path.join(root_directory, 'fly_{}'.format(i)))
     #fly_folders = [os.path.join(root_directory, 'fly_1')]
 
     for fly in fly_folders:
         expt_folders = []
-        expt_folders = [os.path.join(fly,x) for x in os.listdir(fly) if 'func' in x]
+        #expt_folders = [os.path.join(fly,x) for x in os.listdir(fly) if 'func' in x]
+        expt_folders = [os.path.join(fly,x) for x in os.listdir(fly) if 'anat' in x]
         if len(expt_folders) > 0:
             for expt_folder in expt_folders:
                 memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
