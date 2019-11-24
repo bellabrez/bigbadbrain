@@ -54,7 +54,7 @@ def main(directory):
     verbose = True
     grad_steps = 0.2
 
-    print('Working on {}'.format(anat))
+    print('Working on {}'.format(this_anat))
     t0 = time.time()
     slave2master = ants.registration(template,
                                      anatomy_ants,
