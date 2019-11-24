@@ -14,7 +14,7 @@ def main(directory):
     ##### Load template #####
     template_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190224_anatomy_central/meanbrain1/JFRCtemplate2010.nii'
     template = bbb.load_numpy_brain(template_file)
-    template = template.numpy()[:,:,::-1] # Flip Z-axis
+    template = template[:,:,::-1] # Flip Z-axis
     template = template[200:800,:,:] # Cut off optic lobes
     template = ants.from_numpy(template)
     ants.set_spacing(template, (0.622, 0.622, 0.622)) # Set resolution
