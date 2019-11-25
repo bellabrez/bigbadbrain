@@ -12,12 +12,18 @@ def main(directory):
     anat_folder = directory
 
     ##### Load template #####
-    template_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190224_anatomy_central/meanbrain1/JFRCtemplate2010.nii'
+    #template_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190224_anatomy_central/meanbrain1/JFRCtemplate2010.nii'
+    #template = bbb.load_numpy_brain(template_file)
+    #template = template[:,:,::-1] # Flip Z-axis
+    #template = template[200:800,:,:] # Cut off optic lobes
+    #template = ants.from_numpy(template)
+    #ants.set_spacing(template, (0.622, 0.622, 0.622)) # Set resolution
+
+    template_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/2019_nov_meanbrain/meanbrain_final.nii'
     template = bbb.load_numpy_brain(template_file)
-    template = template[:,:,::-1] # Flip Z-axis
-    template = template[200:800,:,:] # Cut off optic lobes
     template = ants.from_numpy(template)
-    ants.set_spacing(template, (0.622, 0.622, 0.622)) # Set resolution
+    template_xml = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/fly_25/anat_0/anatomy.xml'
+    template.set_spacing(bbb.get_resolution(template_xml))
 
     ##### Load individual #####
     fly_num = os.path.split(os.path.split(anat_folder)[0])[-1]
@@ -68,7 +74,7 @@ def main(directory):
     print('COMPLETE. Duration: {:0.0f} sec'.format(time.time()-t0))
 
     ##### Save #####
-    save_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/20191123_meanbrain'
+    save_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/20191124_meanbrain'
     file = os.path.join(save_folder, '{},{}.nii'.format(this_anat,MI_after))
     bbb.save_brain(file, slave2master['warpedmovout'].numpy())
 
