@@ -5,7 +5,6 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --output=./output/slurm-%j.out
-#SBATCH --mail-type=ALL
 
 ml gcc/6.3.0
 ml python/3.6.1
