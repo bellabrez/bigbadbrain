@@ -22,9 +22,10 @@ def main():
 
     #fly_folders = [os.path.join(root_directory, 'fly_68'), os.path.join(root_directory, 'fly_69')]
     #fly_folders = []
+    fly_nums = [12,27,25,23,42,67,72,66,70,13,28,19,3,57,60,22,21,68,61,44,54,68,15,65,58,26,63,56,71,59]
     #for i in np.arange(3,5,7,19,21,48,51,54,68):
-    #for i in [1]:
-    #    fly_folders.append(os.path.join(root_directory, 'fly_{}'.format(i)))
+    for i in fly_nums:
+        fly_folders.append(os.path.join(root_directory, 'fly_{}'.format(i)))
     #fly_folders = [os.path.join(root_directory, 'fly_1')]
 
     for fly in fly_folders:

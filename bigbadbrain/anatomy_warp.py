@@ -19,7 +19,7 @@ def main(directory):
     #template = ants.from_numpy(template)
     #ants.set_spacing(template, (0.622, 0.622, 0.622)) # Set resolution
 
-    template_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/2019_nov_meanbrain/meanbrain_final.nii'
+    template_file = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/20191130_meanbrain/meanbrain_syn.nii'
     template = bbb.load_numpy_brain(template_file)
     template = ants.from_numpy(template)
     template_xml = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/fly_25/anat_0/anatomy.xml'
@@ -48,7 +48,7 @@ def main(directory):
         anatomy = np.swapaxes(anatomy,0,1)
 
     # MIRROR BRAIN
-    anatomy = anatomy[::-1,:,:]
+    #anatomy = anatomy[::-1,:,:]
 
     anatomy_xml = os.path.join(anat_folder, 'anatomy.xml')
     anatomy_ants = ants.from_numpy(anatomy)
@@ -73,12 +73,12 @@ def main(directory):
                                      total_sigma=total_sigma,
                                      grad_steps=grad_steps)
 
-    MI_after = ants.image_mutual_information(template,slave2master['warpedmovout'])
+    #MI_after = ants.image_mutual_information(template,slave2master['warpedmovout'])
     print('COMPLETE. Duration: {:0.0f} sec'.format(time.time()-t0))
 
     ##### Save #####
-    save_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/20191127_meanbrain_mirror'
-    file = os.path.join(save_folder, '{},{}.nii'.format(this_anat,MI_after))
+    save_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/20191130_meanbrain/syn_to_syn'
+    file = os.path.join(save_folder, '{}.nii'.format(this_anat))
     bbb.save_brain(file, slave2master['warpedmovout'].numpy())
 
 if __name__ == '__main__':
