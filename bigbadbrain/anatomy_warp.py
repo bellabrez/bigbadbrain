@@ -48,7 +48,7 @@ def main(directory):
         anatomy = np.swapaxes(anatomy,0,1)
 
     # MIRROR BRAIN
-    #anatomy = anatomy[::-1,:,:]
+    anatomy = anatomy[::-1,:,:]
 
     anatomy_xml = os.path.join(anat_folder, 'anatomy.xml')
     anatomy_ants = ants.from_numpy(anatomy)
@@ -77,7 +77,7 @@ def main(directory):
     print('COMPLETE. Duration: {:0.0f} sec'.format(time.time()-t0))
 
     ##### Save #####
-    save_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/20191130_meanbrain/syn_to_syn'
+    save_folder = '/oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/20191130_meanbrain/syn_to_syn_mirror'
     file = os.path.join(save_folder, '{}.nii'.format(this_anat))
     bbb.save_brain(file, slave2master['warpedmovout'].numpy())
 
