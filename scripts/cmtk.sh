@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=cmtk
 #SBATCH --partition=trc
-#SBATCH --time=2:00:00
+#SBATCH --time=0:05:00
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=1
 #SBATCH --output=./output/slurm-%j.out
 #SBATCH --mail-type=ALL
 
