@@ -1,19 +1,23 @@
 #!/bin/bash
-#SBATCH --job-name=cmtk
+#SBATCH --job-name=cmtk_t
 #SBATCH --partition=trc
-#SBATCH --time=0:05:00
+#SBATCH --time=1:00:00
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --output=./output/slurm-%j.out
-#SBATCH --mail-type=ALL
 
 echo $PWD
 cd /oak/stanford/groups/trc/data/Brezovec/2P_Imaging/20190101_walking_dataset/20191204_anatomy_collection/
 echo $PWD
 
+#f=f21a0.nii
 for f in *.nii
 do
 echo "$f"
+cd /home/users/brezovec/projects/bigbadbrain/scripts/
+echo $PWD
+sbatch cmtk_single.sh $f
+#sbatch "/home/users/brezovec/projects/bigbadbrain/scripts/cmtk_single.sh $f"
 done
 
 #master=Meanbrain.nii
