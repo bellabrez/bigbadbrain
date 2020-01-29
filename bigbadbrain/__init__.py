@@ -8,4 +8,3 @@ from .motcorr import *
 from .utils import *
 from .visual import *
 from .loaders import *
-from .bleaching_analysis import *
