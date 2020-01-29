@@ -129,3 +129,35 @@ def interpolate_fictrac(fictrac, timestamps, fps, dur, behavior='speed',sigma=3,
     np.nan_to_num(fictrac_interp, copy=False);
     
     return fictrac_interp
+
+def smooth_and_interp_fictrac(fictrac, fps, resolution, expt_len, behavior, smoothing=25):
+    camera_rate = 1/fps * 1000 # camera frame rate in ms
+    
+    x_original = np.arange(0,expt_len,camera_rate)
+    # 20ms resolution
+    fictrac_smoothed = scipy.signal.savgol_filter(np.asarray(fictrac[behavior]),smoothing,3)
+    fictrac_interp_temp = interp1d(x_original, fictrac_smoothed, bounds_error = False)
+    xnew = np.arange(0,expt_len,resolution) #0 to last time at subsample res
+    fictrac_interp = fictrac_interp_temp(xnew)
+
+    # convert units for common cases
+    sphere_radius = 4.5e-3 # in m
+    if behavior in ['dRotLabY']:
+        ''' starts with units of rad/frame
+        * sphere_radius(m); now in m/frame
+        * fps; now in m/sec
+        * 1000; now in mm/sec '''
+        
+        fictrac_interp = fictrac_interp * sphere_radius * fps * 1000 # now in mm/sec
+        
+    if behavior in ['dRotLabZ']:
+        ''' starts with units of rad/frame
+        * 180 / np.pi; now in deg/frame
+        * fps; now in deg/sec '''
+        
+        fictrac_interp = fictrac_interp * 180 / np.pi * fps
+    
+    # Replace Nans with zeros (for later code)
+    np.nan_to_num(fictrac_interp, copy=False);
+    
+    return fictrac_interp
