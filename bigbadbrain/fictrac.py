@@ -130,15 +130,18 @@ def interpolate_fictrac(fictrac, timestamps, fps, dur, behavior='speed',sigma=3,
     
     return fictrac_interp
 
-def smooth_and_interp_fictrac(fictrac, fps, resolution, expt_len, behavior, smoothing=25):
+def smooth_and_interp_fictrac(fictrac, fps, resolution, expt_len, behavior, interp_to='xnew', timestamps=None, smoothing=25):
     camera_rate = 1/fps * 1000 # camera frame rate in ms
     
     x_original = np.arange(0,expt_len,camera_rate)
-    # 20ms resolution
     fictrac_smoothed = scipy.signal.savgol_filter(np.asarray(fictrac[behavior]),smoothing,3)
     fictrac_interp_temp = interp1d(x_original, fictrac_smoothed, bounds_error = False)
     xnew = np.arange(0,expt_len,resolution) #0 to last time at subsample res
-    fictrac_interp = fictrac_interp_temp(xnew)
+
+    if interp_to == 'xnew':
+      fictrac_interp = fictrac_interp_temp(xnew)
+    elif interp_to == 'timestamps':
+      fictrac_interp = fictrac_interp_temp(timestamps[:,25])
 
     # convert units for common cases
     sphere_radius = 4.5e-3 # in m

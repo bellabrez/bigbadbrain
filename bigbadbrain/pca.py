@@ -24,7 +24,7 @@ def main(directory):
     print('Scores is PC by voxel {}'.format(pca_scores.shape))
     pca_loadings = pca.transform(X)
     print('Loadings is time by PC {}'.format(pca_loadings.shape))
-    pca_spatial = np.reshape(pca_scores, (-1,dims['x'],dims['y'],dims['z']))
+    pca_spatial = np.reshape(pca_scores, (-1,dims['y'],dims['x'],dims['z']))
     print('Spatial is {}'.format(pca_spatial.shape))
     print('PCA duration: {}'.format(time()-t0))
 
