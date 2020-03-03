@@ -37,13 +37,14 @@ def load_numpy_brain(file, channel=None, flip_z=False):
     brain = nib.load(file).get_data()
     if channel == 'red':
         brain = brain[:,:,:,:,0] # for red brain.
+        brain = np.squeeze(brain)
     if channel  == 'green':
         brain = brain[:,:,:,:,1] # for green brain.
+        brain = np.squeeze(brain)
     #brain = np.swapaxes(brain, 0, 1)
     if flip_z is True:
         brain = np.flip(brain, 2)
-    brain = np.squeeze(brain)
-    brain = np.asarray(brain, 'float64')
+    brain = np.asarray(brain, 'float32')
     #brain = ants.from_numpy(brain)
     return brain
 
@@ -60,7 +61,11 @@ def save_brain(file, brain):
     -------
     Nothing. """
 
-    ants.image_write(ants.from_numpy(brain), file)
+    aff = np.eye(4)
+    img = nib.Nifti1Image(brain, aff)
+    img.to_filename(file)
+
+    #ants.image_write(ants.from_numpy(brain), file)
     memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
     print('Current memory usage: {:.2f}GB'.format(memory_usage))
     sys.stdout.flush()
