@@ -13,7 +13,6 @@ if platform.system() != 'Windows':
     sys.path.insert(0, '/home/users/brezovec/.local/lib/python3.6/site-packages/lib/python/')
     import ants
 
-@timing
 def load_numpy_brain(file, channel=None, flip_z=False):
     """ Loads nifti file into numpy array.
 
@@ -44,7 +43,8 @@ def load_numpy_brain(file, channel=None, flip_z=False):
     #brain = np.swapaxes(brain, 0, 1)
     if flip_z is True:
         brain = np.flip(brain, 2)
-    brain = np.asarray(brain, 'float32')
+    #brain = np.asarray(brain, 'float32') 
+    brain = np.asarray(brain, dtype=np.uint16) #updated 20200624
     #brain = ants.from_numpy(brain)
     return brain
 

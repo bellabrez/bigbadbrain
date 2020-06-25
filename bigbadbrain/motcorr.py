@@ -65,11 +65,10 @@ def split_if_too_big(f):
             result = f(*args, **kwargs)
     return wrapper
 
-@timing
 def motion_correction(brain_master,
                       brain_slave,
-                      directory,
                       motcorr_directory,
+                      printlog,
                       meanbrain=None,
                       start_volume=None,
                       end_volume=None,
@@ -99,7 +98,7 @@ def motion_correction(brain_master,
     motCorr_brain_slave = []
     transforms = []
     durations = []
-    sys.stdout.flush()
+    #sys.stdout.flush()
 
     if start_volume is None:
         start_volume = 0
@@ -110,10 +109,10 @@ def motion_correction(brain_master,
     for i in range(start_volume, end_volume):
         #sys.stdout.write('\r')
         #sys.stdout.flush()
-        print('Aligning brain volume {} of {}.'.format(i+1, dims['t']), end=' ')
+        #print('Aligning brain volume {} of {}.'.format(i+1, dims['t']), end=' ')
         #memory_usage = psutil.Process(os.getpid()).memory_info().rss*10**-9
         #print('Current memory usage: {:.2f}GB'.format(memory_usage))
-        sys.stdout.flush()
+        #sys.stdout.flush()
         t0 = time()
         
         #First, align given master volume to master meanbrain
@@ -127,10 +126,10 @@ def motion_correction(brain_master,
         transformlist = motCorr_vol_master['fwdtransforms']
         motCorr_brain_slave.append(ants.apply_transforms(fixed,moving,transformlist).numpy())
         
-        durations.append(time()-t0)
+        #durations.append()
 
-        print('Average Duration {:.1f}s'.format(np.mean(durations)))
-        sys.stdout.flush()
+        printlog('Single volume alignment time: {:.1f}s'.format(time()-t0))
+        #sys.stdout.flush()
 
     # Save motcorr brains
     save_motCorr_brain(motCorr_brain_master, motcorr_directory, suffix='red'+suffix)
@@ -139,7 +138,6 @@ def motion_correction(brain_master,
     save_transform_files(transforms, motcorr_directory, suffix=suffix)
     #save_motion_figure(transform_matrix, directory, motcorr_directory)
 
-@timing
 def save_transform_files(transforms, motcorr_directory, suffix):
 # Organize mat transform file
     transform_matrix = []
@@ -154,7 +152,6 @@ def save_transform_files(transforms, motcorr_directory, suffix):
     save_file = os.path.join(motcorr_directory, 'motcorr_params{}'.format(suffix))
     np.save(save_file,transform_matrix)
 
-@timing
 def save_motion_figure(transform_matrix, directory, motcorr_directory):
     # Get voxel resolution for figure
     file = os.path.join(directory, 'functional.xml')
@@ -172,7 +169,6 @@ def save_motion_figure(transform_matrix, directory, motcorr_directory):
     plt.legend()
     plt.savefig(save_file, bbox_inches='tight', dpi=300)
 
-@timing
 def save_motCorr_brain(brain, directory, suffix):
     """ Saves a 4D motion corrected brain.
 
