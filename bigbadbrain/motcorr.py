@@ -2,6 +2,7 @@ import numpy as np
 import os
 import sys
 import psutil
+import nibabel as nib
 from time import time
 import matplotlib.pyplot as plt
 from contextlib import contextmanager
@@ -184,10 +185,12 @@ def save_motCorr_brain(brain, directory, suffix):
 
     """
     brain = np.moveaxis(np.asarray(brain),0,3)
-    motCorr_brain_ants = ants.from_numpy(brain)
     save_file = os.path.join(directory, 'motcorr_' + suffix + '.nii')
-    ants.image_write(motCorr_brain_ants, save_file)
-    return motCorr_brain_ants
+    aff = np.eye(4)
+    img = nib.Nifti1Image(brain, aff)
+    img.to_filename(save_file)
+    #motCorr_brain_ants = ants.from_numpy(brain)
+    #ants.image_write(motCorr_brain_ants, save_file)
 
 @contextmanager
 def stderr_redirected(to=os.devnull):
