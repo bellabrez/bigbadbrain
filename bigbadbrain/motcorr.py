@@ -97,8 +97,9 @@ def motion_correction(brain_master,
     # Align each time volume to the meanbrain
     motCorr_brain_master = []
     motCorr_brain_slave = []
-    transforms = []
+    #transforms = []
     durations = []
+    transform_matrix = []
     #sys.stdout.flush()
 
     if start_volume is None:
@@ -119,7 +120,7 @@ def motion_correction(brain_master,
         #First, align given master volume to master meanbrain
         motCorr_vol_master = align_volume(fixed=meanbrain, moving=brain_master, vol=i)
         motCorr_brain_master.append(motCorr_vol_master['warpedmovout'].numpy())
-        transforms.append(motCorr_vol_master['fwdtransforms'])
+        #transforms.append(motCorr_vol_master['fwdtransforms'])
         
         #Then, use warp parameters on slave volume
         fixed = meanbrain
@@ -127,7 +128,12 @@ def motion_correction(brain_master,
         transformlist = motCorr_vol_master['fwdtransforms']
         motCorr_brain_slave.append(ants.apply_transforms(fixed,moving,transformlist).numpy())
         
-        #durations.append()
+        #Lets immediately grab the transform file because otherwise I think it is auto deleted due to "tmp" status...?
+
+        for x in transformlist:
+            if '.mat' in x:
+                temp = ants.read_transform(x)
+                transform_matrix.append(temp.parameters)
 
         printlog(F"Single volume alignment time ({i}/{end_volume-start_volume}): {time()-t0:.1f}s")
         #sys.stdout.flush()
@@ -136,22 +142,26 @@ def motion_correction(brain_master,
     save_motCorr_brain(motCorr_brain_master, motcorr_directory, suffix='red'+suffix)
     save_motCorr_brain(motCorr_brain_slave, motcorr_directory, suffix='green'+suffix)
 
-    save_transform_files(transforms, motcorr_directory, suffix=suffix)
-    #save_motion_figure(transform_matrix, directory, motcorr_directory)
-
-def save_transform_files(transforms, motcorr_directory, suffix):
-# Organize mat transform file
-    transform_matrix = []
-    for i, transform in enumerate(transforms):
-        for x in transform:
-            if '.mat' in x:
-                temp = ants.read_transform(x)
-                transform_matrix.append(temp.parameters)
+    # Save transforms
     transform_matrix = np.array(transform_matrix)
-
-    # Save mat transform file
     save_file = os.path.join(motcorr_directory, 'motcorr_params{}'.format(suffix))
     np.save(save_file,transform_matrix)
+    #save_transform_files(transforms, motcorr_directory, suffix=suffix)
+    #save_motion_figure(transform_matrix, directory, motcorr_directory)
+
+# def save_transform_files(transforms, motcorr_directory, suffix):
+# # Organize mat transform file
+#     transform_matrix = []
+#     for i, transform in enumerate(transforms):
+#         for x in transform:
+#             if '.mat' in x:
+#                 temp = ants.read_transform(x)
+#                 transform_matrix.append(temp.parameters)
+#     transform_matrix = np.array(transform_matrix)
+
+#     # Save mat transform file
+#     save_file = os.path.join(motcorr_directory, 'motcorr_params{}'.format(suffix))
+#     np.save(save_file,transform_matrix)
 
 def save_motion_figure(transform_matrix, directory, motcorr_directory):
     # Get voxel resolution for figure
