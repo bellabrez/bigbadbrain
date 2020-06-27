@@ -129,7 +129,7 @@ def motion_correction(brain_master,
         
         #durations.append()
 
-        printlog('Single volume alignment time: {:.1f}s'.format(time()-t0))
+        printlog(F"Single volume alignment time ({i}/{end_volume-start_volume}): {time()-t0:.1f}s")
         #sys.stdout.flush()
 
     # Save motcorr brains
