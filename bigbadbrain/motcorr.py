@@ -135,8 +135,11 @@ def motion_correction(brain_master,
                 temp = ants.read_transform(x)
                 transform_matrix.append(temp.parameters)
 
-        printlog(F"Single volume alignment time ({i}/{end_volume-start_volume}): {time()-t0:.1f}s")
+        #printlog(F"Single volume alignment time ({i}/{end_volume-start_volume}): {time()-t0:.1f}s")
         #sys.stdout.flush()
+
+        ### IMPORTANT FOR COMMUNICATION WITH DATAFLOW MAIN
+        print(F"[{i+1}]") ################################
 
     # Save motcorr brains
     save_motCorr_brain(motCorr_brain_master, motcorr_directory, suffix='red'+suffix)
